@@ -1,8 +1,10 @@
 import React from 'react'
 import { FaUser, FaHeart, FaShoppingBag, FaSearch } from "react-icons/fa";
+import { Outlet } from 'react-router-dom';
 
 export const UserNavbar = () => {
   return (
+    <div>
       <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
@@ -48,9 +50,13 @@ export const UserNavbar = () => {
             <FaShoppingBag size={18} />
             <span>Bag</span>
           </div>
-
+           
         </div>
+        
       </div>
-    </nav>
+      
+    </nav> 
+    <Outlet/>
+    </div>
   )
 }
