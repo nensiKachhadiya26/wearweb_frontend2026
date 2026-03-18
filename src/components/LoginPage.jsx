@@ -11,23 +11,30 @@ export const LoginPage = () => {
   const{register,handleSubmit,formState:{errors}}=useForm({mode:"all"})
 
 
-    const submitHandler = async(data) => {
+   const submitHandler = async(data)=>{
         try{
-            const res = await axios.post("https://node5.onrender.com/user/login",data)
-            console.log("response..",res)
-            console.log("response data..",res.data)
-            if(res.status==200 || res.status==201){
-            //alert("login success")
-            toast.success("Login Success..")
-            //check role in api response..
-            navigate("/user")}
-          }catch(err){
-              console.log("error...",err);
-              //alert("login failed")
-              toast.error("Login Failed..")
-          }
-
-    }
+             const res = await axios.post("/userApi/login",data)
+             if(res.status==200){
+                toast.success("Login Success")
+                if(res.data.role=="user" || res.data.role=="USER"){
+                  navigate("/user")
+                }
+                else if(res.data.role=="admin" || res.data.role=="ADMIN"){
+                  navigate("/admin")
+                }
+                else if(res.data.role=="seller" || res.data.role=="SELLER"){
+                  navigate("/seller")
+                }
+                else{
+                  toast.error("Invalid Role")
+                  navigate("/")
+                }
+                
+             }
+        }catch(err){
+          toast.error(err.response.data.message)
+        }
+      }
 
     const validationSchema = {
           emailValidator:{
@@ -50,13 +57,13 @@ export const LoginPage = () => {
                   message:'Maximum 16 character is allow..'
               },
                pattern: {
-                  value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%]).{8,}$/,
+                  value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%&*]).{8,}$/,
                   message: "Password must contain Capital, Small, Number & Special character"
                },
           },
     }
   return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FF3F6C]/10">      
+    <div className="min-h-screen flex items-center justify-center bg-[#FF3F6C]/10">      
      <div className="bg-white p-8 rounded-2xl shadow-2xl w-96">
         
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">

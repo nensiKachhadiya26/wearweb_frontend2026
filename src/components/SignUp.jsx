@@ -9,28 +9,15 @@ export const SignUp = () => {
    const {register,handleSubmit,watch,formState: { errors }} = useForm();
 
     const navigate = useNavigate();
-      //   const submitHandler = async (data) => {
-      //     try {
-      //       const res = await axios.post("https://node5.onrender.com/user/user/",data);
-
-      //       if (res.status === 200 || res.status === 201) {
-      //         toast.success("Registration Successful..");
-      //         navigate("/login");
-      //       }
-
-      //     } catch (err) {
-      //       console.log("error...", err);
-      //       toast.error("Registration Failed..");
-      //     }
-      // };
+   
       const submitHandler = async(data)=>{
         try{
-          const res = await axios.post("http://localhost:3000/user/register",data)
+          const res = await axios.post("/userApi/register",data)
           if(res.status==201){
+            toast.dismiss()
             toast.success("User registered successfully")
             navigate("/login")
           }
-
         }catch(err){
           toast.error(err.response.data.message)
         }
@@ -82,7 +69,7 @@ export const SignUp = () => {
                 message: "Email is required.."
               }, 
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                value:/^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: "Enter valid email"
               }
             },
@@ -100,7 +87,7 @@ export const SignUp = () => {
                 message: "Meximum 16 characters required.."
               },
               pattern: {
-                value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%]).{8,}$/,
+                value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%&*]).{8,}$/,
                 message:
                   "Password must contain Capital, Small, Number & Special character"
               }
@@ -167,6 +154,9 @@ export const SignUp = () => {
             />
             
           </div>
+          <label><input type="radio" value="user" {...register("role")}  defaultChecked /> User</label>
+          <label><input type="radio" value="admin" {...register("role")} /> Admin</label>
+          <label><input type="radio" value="seller" {...register("role")} /> Seller</label>
 
          
 

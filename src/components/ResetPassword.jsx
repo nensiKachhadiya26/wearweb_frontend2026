@@ -35,7 +35,7 @@ export const ResetPassword = () => {
             <label className="block text-gray-600 mb-1">Old Password</label>
             <input
               type="password"
-              placeholder="Enter old password"
+              placeholder="Old Password"
               {...register("oldPassword", { required: "Old password is required" })}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF3F6C]/10 focus:border-[#FF3F6C]"
             />
@@ -47,7 +47,7 @@ export const ResetPassword = () => {
             <label className="block text-gray-600 mb-1">New Password</label>
             <input
               type="password"
-              placeholder="Enter new password"
+              placeholder="New Password"
               {...register("newPassword", { 
                 required: "New password is required", 
                 minLength: { value: 8, message: "Minimum 8 characters required" } 
@@ -62,7 +62,7 @@ export const ResetPassword = () => {
             <label className="block text-gray-600 mb-1">Confirm Password</label>
             <input
               type="password"
-              placeholder="Confirm new password"
+              placeholder="Confirm New Password"
               {...register("confirmPassword", { 
                 required: "Confirm password is required", 
                 validate: value => value === newPassword || "Passwords do not match"

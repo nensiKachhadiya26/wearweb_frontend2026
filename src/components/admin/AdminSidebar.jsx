@@ -1,8 +1,12 @@
 import React from "react";
 import {FaTachometerAlt,FaUsers,FaStore,FaCheckCircle,FaShoppingCart,FaStar,} from "react-icons/fa";
+import { AdminHome } from "./AdminHome";
+import { Outlet } from "react-router-dom";
 
 export const AdminSidebar = () => {
   return (
+    <>
+    
     <div className="h-screen w-64 bg-white shadow-lg border-r fixed">
       
       {/* Logo */}
@@ -45,5 +49,7 @@ export const AdminSidebar = () => {
 
       </ul>
     </div>
+    <Outlet/>
+    </>
   );
 };
