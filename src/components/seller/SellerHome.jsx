@@ -2,8 +2,39 @@ import React from "react";
 import { FaBoxOpen, FaShoppingCart, FaRupeeSign } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
 import { SellerSidebar } from "./SellerSidebar"; 
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+
+
 
 export const SellerHome = () => {
+ const [totalCount, setTotalCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        
+        // જો તમે vite વાપરતા હોવ તો પૂરો પાથ લખવો હિતાવહ છે
+        const res = await axios.get("/productApi/my-products", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Dashboard Data:", res.data); // ચેક કરવા માટે
+
+        if (res.data && res.data.data) {
+          setTotalCount(res.data.data.length);
+        }
+      } catch (err) {
+        console.error("Count fetch error:", err);
+      }
+    };
+
+    fetchCount();
+  }, []);
   return (
     <div className="flex min-h-screen bg-[#FFF0F3]">
 
@@ -23,7 +54,7 @@ export const SellerHome = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
             <FaBoxOpen className="text-3xl text-[#FF3F6C]" />
-            <h2 className="text-xl font-semibold mt-2">50</h2>
+            <h2 className="text-xl font-semibold mt-2">{totalCount}</h2>
             <p className="text-gray-500">Total Products</p>
           </div>
 

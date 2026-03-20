@@ -1,134 +1,100 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import kidsbgi from "../../assets/images/kidsbgi.jpg";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Kids = () => {
 
-const [products,setProducts] = useState([])
- const navigate = useNavigate();
-        useEffect(()=>{
-             axios.get("productApi/products")
-           
-            .then((res)=>{
-                setProducts(res.data.data)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-},[])
-products.filter((product) => product.category === "Kids")
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    axios.get("productApi/products",{ headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+      .then((res) => {
+        setProducts(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-return (
+  const handleAddToCart = async (productId) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please login first!"); // જો toast ન ચાલતું હોય તો alert ચેક કરવા માટે
+            navigate("/login");
+            return;
+        }
 
-    <div className="bg-gray-50 min-h-screen">
+        // URL બરાબર ચેક કરજો (તમારા backend routes મુજબ)
+        const res = await axios.post("/cartApi/cart", 
+            { 
+                product_id: productId, 
+                quantity: 1 
+            }, 
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
 
-{/* Banner */}
+        if (res.status === 201 || res.status === 200) {
+            console.log("Cart updated:", res.data);
+            if (typeof toast !== 'undefined') {
+                toast.success("Product added to cart! 🛒");
+            } else {
+                alert("Product added to cart!");
+            }
+            navigate("/user/cartpage");
+        }
+    } catch (err) {
+        console.error("Add to cart error:", err.response || err);
+        if (err.response && err.response.status === 404) {
+            alert("API Path not found (404). Please check your Backend Routes.");
+        }
+    }
+};
+  // ✅ filter correct
+  const kidsProducts = products.filter(
+    (product) => product.categoryId?.name === "Kids"
+  );
 
-    <div className="w-full h-64 bg-cover bg-center" style={{backgroundImage:`url(${kidsbgi})`}}/>
+  return (
+    <div className="bg-[#FFF0F5] min-h-screen p-6">
 
-    <div className="flex gap-8 px-10 py-8">
+      <h1 className="text-2xl font-bold mb-6">Kids Collection</h1>
+ 
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-{/* Filters */}
+        {kidsProducts.map((product) => (
+          <div key={product._id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
 
-    <div className="w-64 bg-white p-5 rounded shadow">
+            <img
+              src={product.image?.[0] || "/placeholder.jpg"}
+              alt={product.name}
+              className="w-full h-64 object-cover rounded-t-xl"
+            />
 
-    <h2 className="font-bold mb-5 text-lg">Filters</h2>
+            <div className="p-4">
+              <h2 className="text-sm font-semibold">{product.name}</h2>
+              <p className="text-pink-500 font-bold">₹{product.price}</p>
 
-{/* Brand */}
+              <button
+                onClick={() => handleAddToCart(product._id)}
+                className="mt-3 w-full bg-pink-500 text-white py-1 rounded hover:bg-pink-600" >
+                Add to Cart
+              </button>
+            </div>
 
-    <div className="mb-5">
-        <h3 className="font-semibold mb-2">Category</h3>
-        <label className="block"><input type="checkbox"/> Jeans</label>
-        <label className="block"><input type="checkbox"/> Shirt</label>
-        <label className="block"><input type="checkbox"/> T-Shirt</label>
-        <label className="block"><input type="checkbox"/> Jacket</label>
-        <label className="block"><input type="checkbox"/> Footware</label>
-        <label className="block"><input type="checkbox"/> Watch</label>
+          </div>
+        ))}
+
+      </div>
     </div>
+  );
+};
 
-{/* Size */}
-
-    <div className="mb-5">
-        <h3 className="font-semibold mb-2">Size</h3>
-        <div className="flex gap-2">
-            <button className="border px-3 py-1">S</button>
-            <button className="border px-3 py-1">M</button>
-            <button className="border px-3 py-1">L</button>
-            <button className="border px-3 py-1">XL</button>
-        </div>
-    </div>
-
-    {/* Color */}
-
-    <div>
-        <h3 className="font-semibold mb-2">Color</h3>
-        <div className="flex gap-3">
-            <span className="w-6 h-6 rounded-full bg-red-500 border"></span>
-            <span className="w-6 h-6 rounded-full bg-blue-500 border"></span>
-            <span className="w-6 h-6 rounded-full bg-black border"></span>
-            <span className="w-6 h-6 rounded-full bg-green-500 border"></span>
-            <span className="w-6 h-6 rounded-full bg-yellow-400 border"></span>
-        </div>
-    </div>
-</div>
-
-    {/* Products */}
-
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-1">
-     {products
-    .filter(product => product.categoryId?.name === "Kids")
-    .map((product) => (
-    <div key={product._id} className="bg-white rounded-lg shadow hover:shadow-xl transition relative">
-      <img src={product.image?.[0] || "/placeholder.jpg"} className="w-full h-64 object-cover rounded-t-lg" alt={product.name} />
-
-    <div className="p-4">
-
-        <h3 className="font-semibold">{product.name}</h3>
-
-        <p className="text-gray-500 text-sm">
-            Premium Fashion
-        </p>
-
-    <div className="flex justify-between items-center mt-3">
-
-        <span className="text-pink-600 font-bold">
-            ₹{product.price}
-        </span>
-
-        <button className="bg-pink-500 text-white px-3 py-1 rounded text-sm">
-            Buy
-        </button>
-       
-       <div>
-  <button
-    onClick={(e) => {
-      e.stopPropagation(); // 🔥 main fix
-      addToCart(product);
-      navigate("/user/cartpage");
-    }}
-  >
-    Add To Cart
-  </button>
-</div>
-        
-
-    </div>
-
-</div>
-
-</div>
-
-))}
-
-</div>
-
-
-</div>
-
-</div>
-
-)}
-
-export default Kids
+export default Kids;

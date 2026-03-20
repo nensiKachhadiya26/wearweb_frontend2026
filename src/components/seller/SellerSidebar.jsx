@@ -18,10 +18,12 @@ export const SellerSidebar = () => {
             <FaTachometerAlt />
             Dashboard
           </li>
+          <Link to='/seller/myproduct'>
           <li className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition">
             <FaStore />
             My Products
           </li>
+          </Link>
           <li className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition">
             <FaShoppingCart />
             Orders

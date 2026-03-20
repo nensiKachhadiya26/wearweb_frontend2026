@@ -16,6 +16,9 @@ import CartPage from "../components/user/CartPage";
 import ProductDetail from "../components/user/ProductDetail";
 import {UserHome }from "../components/user/UserHome";
 import { Home } from "../components/user/Home";
+import { MyProductsDisplay } from "../components/seller/MyProductDisplay";
+import HomeProduct from "../components/user/HomeProduct";
+import Beauty from "../components/user/Beauty";
 
 
 const router = createBrowserRouter([
@@ -34,6 +37,8 @@ const router = createBrowserRouter([
             {path:'men',element:<Men/>},
             {path:'women',element:<Women/>},
             {path:'kids',element:<Kids/>},
+            {path:'homeproduct',element:<HomeProduct/>},
+            {path:'beauty',element:<Beauty/>},
             {path:'cartpage',element:<CartPage/>},
             {path:'product/:id' , element:<ProductDetail/>}
         ]        
@@ -41,7 +46,7 @@ const router = createBrowserRouter([
     {
         path:'/seller', element:<SellerHome/>,
         children:[
-          
+            {path:'myproduct',element:<MyProductsDisplay/>},
             {path:'createproduct',element:<CreateProduct/>}
         ]
     },

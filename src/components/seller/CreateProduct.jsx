@@ -10,24 +10,41 @@ export const CreateProduct = () => {
    const [categories, setcategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
 
-  const submitHandler  = async(data)=>{
-    console.log("data",data)
-    const res = await axios.post("/productApi/product",data,
-     {
+  const submitHandler = async (data) => {
+  try {
+    // આ લાઇન ઉમેરો: localStorage માંથી ટોકન લાવો
+    const token = localStorage.getItem("token"); 
+
+    // જો ટોકન ન હોય તો યુઝરને જણાવી દો
+    if (!token) {
+      toast.error("If you first login");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("description", data.description);
+    formData.append("categoryId", data.categoryId);
+    formData.append("subCategoryId", data.subCategoryId);
+    formData.append("image", data.image[0]);
+
+    const res = await axios.post("/productApi/product", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        // અહીં હવે 'token' વેરીએબલ કામ કરશે
+        "Authorization": `Bearer ${token}`, 
       },
-    })
-    
-    try{
-      if(res.status==201){
-                toast.success("product added..")
-                //navigate..
-            }
-    }catch(err){
-        toast.error("error while create product")
+    });
+
+    if (res.status === 201) {
+      toast.success("Product created successfully!");
     }
+  } catch (err) {
+    console.error("Error:", err);
+    toast.error("Error while creating product");
   }
+};
   const fetchAllCategories = async()=>{
         const res = await axios.get("/categoryApi/categories")
         console.log(res.data.data)
@@ -59,7 +76,7 @@ export const CreateProduct = () => {
         </div>
         <div>
           <label>Category:</label>
-          <select type='text' className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" {...register("categoryId")}>
+          <select type='text' className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" {...register("categoryId" , { required: true })}>
             {
               categories.map((cat)=>{
                 return <option key={cat._id} value={cat._id}>{cat.name}</option>
