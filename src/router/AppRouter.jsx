@@ -17,8 +17,20 @@ import ProductDetail from "../components/user/ProductDetail";
 import {UserHome }from "../components/user/UserHome";
 import { Home } from "../components/user/Home";
 import { MyProductsDisplay } from "../components/seller/MyProductDisplay";
-import HomeProduct from "../components/user/HomeProduct";
+
 import Beauty from "../components/user/Beauty";
+import ProtectedRoutes from "../components/ProtectedRoutes";
+import { EditProduct } from "../components/seller/EditProduct";
+import  { Checkout }  from "../components/user/CheckOut";
+import ThankYou from "../components/user/ThankYou";
+import OrderHistory from "../components/user/OrderHistory";
+import { ManageUser } from "../components/admin/ManageUser";
+import { ManageSeller } from "../components/admin/ManageSeller";
+import { ApproveProducts } from "../components/admin/ApproveProducts";
+import OrderDetail from "../components/user/OrderDetail";
+import Accessories from "../components/user/Accessories";
+import SellerOrder from "../components/seller/SellerOrder";
+import SellerOrderDetails from "../components/seller/SellerOrderDetails";
 
 
 const router = createBrowserRouter([
@@ -27,27 +39,52 @@ const router = createBrowserRouter([
     {path:'/resetpassword',element:<ResetPassword/>},
    
     {
-        path:'/admin', element:<AdminHome/>,
+        path:'/admin', element:
+        <ProtectedRoutes userRoles={["admin"]}>
+            <AdminSidebar/>
+        </ProtectedRoutes>,
+        children:[
+            {index:true,element:<AdminHome/>},
+           {path:'manage-user',element:<ManageUser/>},
+           { path: 'manage-seller', element: <ManageSeller /> },
+           { path: 'approve-products', element: <ApproveProducts /> },
+            // { path: 'view-sales', element: <ViewSale/> },
+            // { path: 'reviews', element: <Reviews /> },
+        ]
         
     },
     {
-        path:'/user',element:<UserHome/>,
+        path:'/user',element:
+        <ProtectedRoutes userRoles={["user"]}>
+            <UserHome/>
+        </ProtectedRoutes>,
         children:[
             { index: true, element: <Home/> }, 
             {path:'men',element:<Men/>},
             {path:'women',element:<Women/>},
             {path:'kids',element:<Kids/>},
-            {path:'homeproduct',element:<HomeProduct/>},
+          {path:'accessories',element:<Accessories/>},
             {path:'beauty',element:<Beauty/>},
             {path:'cartpage',element:<CartPage/>},
-            {path:'product/:id' , element:<ProductDetail/>}
+            {path:'product/:id' , element:<ProductDetail/>},
+           {path:'checkout',element:<Checkout/>},
+           {path:'thankyou',element:<ThankYou/>},
+           {path:'orderhistory',element:<OrderHistory/>},
+           { path: 'order-detail/:id', element: <OrderDetail /> }
         ]        
     },
     {
-        path:'/seller', element:<SellerHome/>,
+        path:'/seller', element:
+        <ProtectedRoutes userRoles={["seller"]}>
+            <SellerSidebar/>
+        </ProtectedRoutes>,
         children:[
+            {index:true,element:<SellerHome/>},
             {path:'myproduct',element:<MyProductsDisplay/>},
-            {path:'createproduct',element:<CreateProduct/>}
+            {path:'createproduct',element:<CreateProduct/>},
+             {path:"edit-product/:id" ,element:<EditProduct/>},
+             {path:'order',element:<SellerOrder/>},
+             {path:'orderdetail/:id',element:<SellerOrderDetails/>}
         ]
     },
 ])

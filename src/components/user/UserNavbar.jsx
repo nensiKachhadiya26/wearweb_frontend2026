@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi"; 
+import { handleLogout } from "../utils/LogOut"; 
 
 export const UserNavbar = () => {
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export const UserNavbar = () => {
         <p onClick={() => navigate("/user/men")} className="cursor-pointer  hover:text-pink-500">Men</p>
         <p onClick={() => navigate("/user/women")} className="cursor-pointer  hover:text-pink-500">Women</p>
         <p onClick={() => navigate("/user/kids")} className="cursor-pointer  hover:text-pink-500">Kids</p>
-        <p onClick={() => navigate("/user/homeproduct")} className="cursor-pointer  hover:text-pink-500">Home</p>
+        <p onClick={() => navigate("/user/accessories")} className="cursor-pointer  hover:text-pink-500">Accessories</p>
         <p onClick={() => navigate("/user/beauty")} className="cursor-pointer  hover:text-pink-500">Beauty</p>
 
       </div>
@@ -39,6 +41,11 @@ export const UserNavbar = () => {
         <FaUserCircle
           className="text-2xl cursor-pointer hover:text-pink-500"
           onClick={() => navigate("/login")}
+        />
+        <FiLogOut
+          className="text-2xl cursor-pointer text-gray-600 hover:text-red-500 transition-colors"
+          title="Logout"
+          onClick={() => handleLogout(navigate)} // Utility function no upyog
         />
 
       </div>

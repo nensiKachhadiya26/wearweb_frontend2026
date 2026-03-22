@@ -1,118 +1,108 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBoxOpen, FaShoppingCart, FaRupeeSign } from "react-icons/fa";
-import { Outlet } from "react-router-dom";
-import { SellerSidebar } from "./SellerSidebar"; 
-import { useEffect } from "react";
-import { useState } from "react";
 import axios from "axios";
-
-
+import { toast } from "react-toastify";
 
 export const SellerHome = () => {
- const [totalCount, setTotalCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalOrder, setTotalOrder] = useState(0);
+  const [revenue, setRevenue] = useState(0); // રેવન્યુ માટે નવું સ્ટેટ
 
   useEffect(() => {
-    const fetchCount = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        
-        // જો તમે vite વાપરતા હોવ તો પૂરો પાથ લખવો હિતાવહ છે
-        const res = await axios.get("/productApi/my-products", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    const fetchDashboardData = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
 
-        console.log("Dashboard Data:", res.data); // ચેક કરવા માટે
+    // ૧. પ્રોડક્ટ્સ ફેચ કરો (આ લાઇન પહેલા રાખો)
+    const prodRes = await axios.get("/productApi/my-products", { headers });
+    if (prodRes.data && prodRes.data.data) {
+      setTotalCount(prodRes.data.data.length);
+    }
 
-        if (res.data && res.data.data) {
-          setTotalCount(res.data.data.length);
-        }
-      } catch (err) {
-        console.error("Count fetch error:", err);
-      }
-    };
+    // ૨. ઓર્ડર્સ ફેચ કરો (અહીં ખાતરી કરો કે orderRes બરાબર લખ્યું છે)
+    const orderRes = await axios.get("/orderApi/order", { headers });
+    
+    // ચેક કરો કે orderRes માં ડેટા છે કે નહીં
+    if (orderRes.data && orderRes.data.data) {
+      const orders = orderRes.data.data;
+      setTotalOrder(orders.length);
 
-    fetchCount();
+      const totalRev = orders.reduce((acc, curr) => {
+        return acc + (Number(curr.total_amount) || 0);
+      }, 0);
+      setRevenue(totalRev);
+    }
+  } catch (err) {
+    console.error("Fetch error:", err); // એરર જોવા માટે
+  }
+};
+
+    fetchDashboardData();
   }, []);
+
   return (
-    <div className="flex min-h-screen bg-[#FFF0F3]">
+    <div>
+      <h1 className="text-3xl font-bold text-[#FF3F6C] mb-8">
+        Seller Dashboard
+      </h1>
 
-      {/* Sidebar */}
-      <div className="w-64 fixed h-full">
-        <SellerSidebar /> 
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 ml-64 p-6">
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-[#FF3F6C] mb-6">
-          Seller Dashboard
-        </h1>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      {/* Stats Cards - ડિઝાઇન એ જ રહેશે */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-pink-50 flex flex-col items-center text-center">
+          <div className="bg-pink-50 p-4 rounded-full mb-3">
             <FaBoxOpen className="text-3xl text-[#FF3F6C]" />
-            <h2 className="text-xl font-semibold mt-2">{totalCount}</h2>
-            <p className="text-gray-500">Total Products</p>
           </div>
-
-          <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-            <FaShoppingCart className="text-3xl text-[#FF3F6C]" />
-            <h2 className="text-xl font-semibold mt-2">120</h2>
-            <p className="text-gray-500">Orders</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
-            <FaRupeeSign className="text-3xl text-[#FF3F6C]" />
-            <h2 className="text-xl font-semibold mt-2">₹1,75,000</h2>
-            <p className="text-gray-500">Revenue</p>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-800">{totalCount}</h2>
+          <p className="text-gray-500 font-medium">Total Products</p>
         </div>
 
-        {/* Recent Orders */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="text-xl font-semibold mb-4 text-[#FF3F6C]">
-            Recent Orders
-          </h2>
+        <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-blue-50 flex flex-col items-center text-center">
+          <div className="bg-blue-50 p-4 rounded-full mb-3">
+            <FaShoppingCart className="text-3xl text-blue-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800">{totalOrder}</h2>
+          <p className="text-gray-500 font-medium">Orders</p>
+        </div>
 
+        <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-green-50 flex flex-col items-center text-center">
+          <div className="bg-green-50 p-4 rounded-full mb-3">
+            <FaRupeeSign className="text-3xl text-green-500" />
+          </div>
+          {/* હવે અહીં ડાયનેમિક રેવન્યુ દેખાશે */}
+          <h2 className="text-2xl font-bold text-gray-800">₹{revenue.toLocaleString()}</h2>
+          <p className="text-gray-500 font-medium">Revenue</p>
+        </div>
+      </div>
+
+      {/* Recent Orders Table - હાલ પૂરતું સ્ટેટિક રાખ્યું છે જેમ તમે કહ્યું એમ */}
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 className="text-xl font-bold mb-6 text-gray-800 border-b pb-4">
+          Recent Orders
+        </h2>
+        <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b">
-                <th className="py-2">Order ID</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Status</th>
+              <tr className="text-gray-400 text-sm uppercase tracking-wider">
+                <th className="py-3 px-2">Order ID</th>
+                <th className="py-3 px-2">Product</th>
+                <th className="py-3 px-2">Quantity</th>
+                <th className="py-3 px-2">Status</th>
               </tr>
             </thead>
-
-            <tbody>
-              <tr className="border-b">
-                <td className="py-2">#201</td>
-                <td>T-shirt</td>
-                <td>2</td>
-                <td className="text-green-500">Delivered</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2">#202</td>
-                <td>Shoes</td>
-                <td>1</td>
-                <td className="text-yellow-500">Pending</td>
-              </tr>
-              <tr>
-                <td className="py-2">#203</td>
-                <td>Jeans</td>
-                <td>3</td>
-                <td className="text-blue-500">Shipped</td>
+            <tbody className="text-gray-600">
+              <tr className="border-b border-gray-50 hover:bg-gray-50">
+                <td className="py-4 px-2 font-medium">#201</td>
+                <td className="py-4 px-2">T-shirt</td>
+                <td className="py-4 px-2">2</td>
+                <td className="py-4 px-2">
+                   <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold">Delivered</span>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-
-      <Outlet />  
-  
-   </div>
+      </div>
     </div>
   );
 };

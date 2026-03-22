@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
 
+  const totalItemsCount = cartItems.reduce((total, item) => total + (Number(item.quantity) || 0), 0);
+  
   const fetchCart = async () => {
     try {
       setLoading(true);
@@ -21,19 +25,29 @@ const CartPage = () => {
         calculateTotal(items); 
       } else {
         setCartItems([]);
+        setTotalPrice(0);
       }
     } catch (err) {
       console.error("Cart Fetch Error:", err);
-      toast.error("Cart Load Generate Error!");
+      toast.error("Cart Load Error!");
     } finally {
       setLoading(false);
     }
   };
 
   const calculateTotal = (items) => {
+    if (!items || items.length === 0) {
+      setTotalPrice(0);
+      return;
+    }
+
     const total = items.reduce((acc, item) => {
-      return acc + (item.product_id?.price * item.quantity || 0);
+      const product = item.product_id;
+      const price = Number(product?.price) || 0;
+      const qty = Number(item.quantity) || 0;
+      return acc + (price * qty);
     }, 0);
+
     setTotalPrice(total);
   };
 
@@ -47,32 +61,27 @@ const CartPage = () => {
       toast.success("Item removed! 🗑️");
       fetchCart(); 
     } catch (err) {
-      console.error("Remove Error:", err);
-      toast.error("Not Any Item Remove!");
+      toast.error("Could not remove item!");
     }
   };
 
-  const handlePlaceOrder = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const res = await axios.post("/orderApi/order", 
-        { total_amount: totalPrice }, 
-        { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if(res.status === 201) {
-            alert("Order Success! 🎉");
-            navigate("/user/home");
-        }
-    } catch (err) {
-        console.log("Order Error", err);
+  const handlePlaceOrder = () => {
+    if (cartItems.length === 0) {
+      toast.warning("Your Cart Is Empty..!");
+      return;
     }
-};
+
+    navigate("/user/checkout", { 
+      state: { 
+        cartItems: cartItems, 
+        totalAmount: totalPrice 
+      } 
+    });
+  };
 
   useEffect(() => {
     fetchCart();
   }, []);
-  
 
   if (loading) {
     return (
@@ -91,40 +100,36 @@ const CartPage = () => {
 
       {cartItems.length === 0 ? (
         <div className="bg-white p-12 rounded-3xl shadow-lg text-center max-w-md mx-auto">
-          <div className="text-6xl mb-4">🛒</div>
           <p className="text-gray-500 text-xl font-medium mb-6">Your Cart Is Empty</p>
-          <button 
-            onClick={() => window.location.href = "/user/men"} 
-            className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transition"
-          >
+          <button onClick={() => navigate("/user/home")} className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transition">
             Shop Now
           </button>
         </div>
       ) : (
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Cart Items List */}
+          {/* Left Side: Cart Items List */}
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
-              <div key={item._id} className="flex flex-col sm:flex-row items-center justify-between bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition duration-300">
+              <div key={item._id} className="flex flex-col sm:flex-row items-center justify-between bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
                 <div className="flex items-center gap-6 w-full">
                   <img 
-                    src={item.product_id?.image?.[0] || "https://via.placeholder.com/150"} 
-                    alt={item.product_id?.name} 
-                    className="w-24 h-24 object-cover rounded-xl border border-pink-50"
+                    src={item.product_id?.image?.[0] || item.product_id?.image || "https://via.placeholder.com/150"} 
+                    className="w-24 h-24 object-cover rounded-xl border border-pink-100"
+                    alt="product"
                   />
                   <div className="flex-1">
                     <h2 className="font-bold text-lg text-gray-800">{item.product_id?.name}</h2>
                     <p className="text-pink-600 font-extrabold text-xl">₹{item.product_id?.price}</p>
-                    <div className="flex items-center mt-2 text-sm text-gray-500">
-                      <span className="bg-gray-100 px-3 py-1 rounded-full">Quantity: {item.quantity}</span>
+                    <div className="mt-2">
+                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
+                        Qty: {item?.quantity || 0}
+                      </span>
                     </div>
                   </div>
                 </div>
-                
                 <button 
-                  onClick={() => handleRemove(item.product_id?._id)}
-                  className="mt-4 sm:mt-0 bg-red-50 text-red-500 px-4 py-2 rounded-xl hover:bg-red-500 hover:text-white transition-all duration-300 font-medium"
+                  onClick={() => handleRemove(item.product_id?._id)} 
+                  className="text-red-500 font-medium p-2 hover:bg-red-50 rounded-lg mt-4 sm:mt-0 transition"
                 >
                   Remove
                 </button>
@@ -132,35 +137,29 @@ const CartPage = () => {
             ))}
           </div>
 
-          {/* Order Summary Section */}
+          {/* Right Side: Order Summary */}
           <div className="lg:col-span-1">
             <div className="sticky top-10 bg-white p-6 rounded-3xl shadow-md border-t-8 border-pink-500">
-              <h3 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Order Summary</h3>
-              
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-gray-600">
+              <h3 className="text-2xl font-bold mb-6 text-gray-800">Order Summary</h3>
+              <div className="space-y-4 mb-6 text-gray-600">
+                <div className="flex justify-between">
                   <span>Total Items:</span>
-                  <span className="font-bold">{cartItems.length}</span>
+                  <b className="text-gray-900">{totalItemsCount}</b>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping:</span>
-                  <span className="text-green-500 font-bold font-gujarati italic">FREE</span>
-                </div>
-                <div className="flex justify-between text-xl font-bold text-gray-900 border-t pt-4">
+                <div className="flex justify-between font-bold text-gray-900 border-t pt-4 text-xl">
                   <span>Total Payable:</span>
                   <span className="text-pink-600">₹{totalPrice}</span>
                 </div>
               </div>
 
               <button 
-              onClick={handlePlaceOrder}
-                className="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-pink-600 shadow-lg shadow-pink-200 transition active:scale-95">
+                onClick={handlePlaceOrder} 
+                className="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-pink-600 shadow-lg transition active:scale-95"
+              >
                 Place Order 💳
               </button>
-              <p className="text-center text-xs text-gray-400 mt-4">Safe & Secure Payments</p>
             </div>
           </div>
-
         </div>
       )}
     </div>

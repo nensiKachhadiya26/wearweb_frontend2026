@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const HomeProduct = () => {
+const Accessories = () => {
 
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
@@ -58,18 +58,18 @@ const HomeProduct = () => {
     }
 };
   // ✅ filter correct
-  const homeProducts = products.filter(
-    (product) => product.categoryId?.name === "Home"
+  const accessoriesProducts = products.filter(
+    (product) => product.categoryId?.name === "Accessories"
   );
 
   return (
     <div className="bg-[#FFF0F5] min-h-screen p-6">
 
-      <h1 className="text-2xl font-bold mb-6">Home Item Collection</h1>
+      <h1 className="text-2xl font-bold mb-6">Accessories Collection</h1>
  
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        {homeProducts.map((product) => (
+        {accessoriesProducts.map((product) => (
           <div key={product._id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
 
             <img
@@ -97,4 +97,4 @@ const HomeProduct = () => {
   );
 };
 
-export default HomeProduct;
+export default Accessories;

@@ -25,12 +25,12 @@ const Kids = () => {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
-            alert("Please login first!"); // જો toast ન ચાલતું હોય તો alert ચેક કરવા માટે
+            alert("Please login first!"); 
+            
             navigate("/login");
             return;
         }
 
-        // URL બરાબર ચેક કરજો (તમારા backend routes મુજબ)
         const res = await axios.post("/cartApi/cart", 
             { 
                 product_id: productId, 
