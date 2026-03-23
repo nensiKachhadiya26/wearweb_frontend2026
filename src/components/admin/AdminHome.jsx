@@ -4,7 +4,7 @@ import axios from "axios";
 
 export const AdminHome = () => {
   // 1. Stats State
-  const [stats, setStats] = useState({
+  const [status, setStatus] = useState({
     totalUsers: 0,
     totalProducts: 0,
     totalOrders: 0,
@@ -14,12 +14,12 @@ export const AdminHome = () => {
 
   // 2. Fetch Data from Backend
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchStatus = async () => {
       try {
         // Tamara backend route mujab
         const res = await axios.get("/userApi/admin/status");
         if (res.data.success) {
-          setStats(res.data.stats);
+          setStatus(res.data.stats);
         }
       } catch (err) {
         console.error("Dashboard data fetch error:", err);
@@ -27,7 +27,7 @@ export const AdminHome = () => {
         setLoading(false);
       }
     };
-    fetchStats();
+    fetchStatus();
   }, []);
 
   if (loading) {
@@ -55,7 +55,7 @@ export const AdminHome = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-blue-500 hover:shadow-md transition-all duration-300 flex items-center justify-between">
           <div>
             <p className="text-gray-400 text-sm font-bold uppercase mb-1">Total Users</p>
-            <h2 className="text-3xl font-extrabold text-gray-800">{stats.totalUsers}</h2>
+            <h2 className="text-3xl font-extrabold text-gray-800">{status.totalUsers}</h2>
           </div>
           <div className="p-4 bg-blue-50 rounded-xl text-blue-500 text-2xl">
             <FaUsers />
@@ -66,7 +66,7 @@ export const AdminHome = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-pink-500 hover:shadow-md transition-all duration-300 flex items-center justify-between">
           <div>
             <p className="text-gray-400 text-sm font-bold uppercase mb-1">Orders</p>
-            <h2 className="text-3xl font-extrabold text-gray-800">{stats.totalOrders}</h2>
+            <h2 className="text-3xl font-extrabold text-gray-800">{status.totalOrders}</h2>
           </div>
           <div className="p-4 bg-pink-50 rounded-xl text-pink-500 text-2xl">
             <FaShoppingBag />
@@ -77,7 +77,7 @@ export const AdminHome = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-orange-500 hover:shadow-md transition-all duration-300 flex items-center justify-between">
           <div>
             <p className="text-gray-400 text-sm font-bold uppercase mb-1">Products</p>
-            <h2 className="text-3xl font-extrabold text-gray-800">{stats.totalProducts}</h2>
+            <h2 className="text-3xl font-extrabold text-gray-800">{status.totalProducts}</h2>
           </div>
           <div className="p-4 bg-orange-50 rounded-xl text-orange-500 text-2xl">
             <FaBoxOpen />
@@ -89,7 +89,7 @@ export const AdminHome = () => {
           <div>
             <p className="text-gray-400 text-sm font-bold uppercase mb-1">Revenue</p>
             <h2 className="text-3xl font-extrabold text-gray-800">
-              ₹{stats.totalRevenue?.toLocaleString("en-IN") || 0}
+              ₹{status.totalRevenue?.toLocaleString("en-IN") || 0}
             </h2>
           </div>
           <div className="p-4 bg-green-50 rounded-xl text-green-500 text-2xl">

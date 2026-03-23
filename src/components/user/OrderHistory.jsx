@@ -33,7 +33,7 @@ const OrderHistory = () => {
                     <div className="space-y-6">
                         {orders.map((order) => (
                             <div key={order._id} className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 transition-hover duration-300 hover:shadow-lg">
-                                {/* ઓર્ડર હેડર */}
+                                
                                 <div className="bg-gray-50 px-6 py-4 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4">
                                     <div>
                                         <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Order Number</p>
@@ -54,7 +54,6 @@ const OrderHistory = () => {
                                     </span>
                                 </div>
 
-                                {/* અહીં પ્રોડક્ટ્સ બતાવવા માટે જો તમે populate વાપર્યું હોય તો */}
                                 <div className="p-6">
                                     <Link to={`/user/order-detail/${order._id}`} className="text-pink-600 font-bold">
                                         Order Detail →

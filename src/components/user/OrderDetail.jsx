@@ -35,7 +35,7 @@ const OrderDetail = () => {
             <h2 className="text-2xl font-bold border-b pb-4 mb-6 text-pink-600">Order Details</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* ૧. પ્રોડક્ટની વિગતો */}
+                
                 <div>
                     <h3 className="font-bold text-lg mb-4 text-gray-700">Items Ordered</h3>
                     {order.cartItems.map((item, index) => (
@@ -53,7 +53,7 @@ const OrderDetail = () => {
                     </div>
                 </div>
 
-                {/* ૨. એડ્રેસ અને સ્ટેટસ */}
+               
                 <div className="bg-gray-50 p-6 rounded-xl">
                     <div className="mb-6">
                         <h3 className="font-bold text-gray-700 mb-2">Shipping Address</h3>

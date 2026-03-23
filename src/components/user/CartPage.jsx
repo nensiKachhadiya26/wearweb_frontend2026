@@ -107,7 +107,7 @@ const CartPage = () => {
         </div>
       ) : (
         <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Side: Cart Items List */}
+         
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
               <div key={item._id} className="flex flex-col sm:flex-row items-center justify-between bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition">
@@ -137,7 +137,7 @@ const CartPage = () => {
             ))}
           </div>
 
-          {/* Right Side: Order Summary */}
+          
           <div className="lg:col-span-1">
             <div className="sticky top-10 bg-white p-6 rounded-3xl shadow-md border-t-8 border-pink-500">
               <h3 className="text-2xl font-bold mb-6 text-gray-800">Order Summary</h3>

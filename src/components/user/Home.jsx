@@ -32,14 +32,14 @@ export const Home = () => {
       path: "kids",
     },
     {
-      name: "Home",
+      name: "Accessories",
       image: home,
-      path: "kids",
+      path: "accessories",
     },
     {
       name: "Beauty",
       image: beauty,
-      path: "kids",
+      path: "beauty",
     },
   ];
 

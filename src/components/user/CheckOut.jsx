@@ -10,7 +10,7 @@ export const Checkout = () => {
     // ૧. CartPage પરથી ડેટા મેળવો
     const { cartItems, totalAmount: receivedTotal } = location.state || { cartItems: [], totalAmount: 0 };
 
-    // ૨. ટોટલ ગણતરી (સ્કીમામાં total_amount તરીકે જશે)
+    // ૨. ટોટલ ગણતરી
     const totalAmount = receivedTotal > 0 ? receivedTotal : cartItems.reduce((acc, item) => {
         const price = item.productId?.price || item.price || 0;
         return acc + (price * item.quantity);
@@ -19,7 +19,7 @@ export const Checkout = () => {
     const [address, setAddress] = useState({
         fullName: '',
         phone: '',
-        address: '', // આ સ્કીમાના address ફિલ્ડમાં જશે
+        address: '', 
         city: '',
         pincode: ''
     });
@@ -44,17 +44,17 @@ export const Checkout = () => {
             
             // ૩. આઈટમ્સ ક્લીનિંગ
             const cleanedCartItems = cartItems.map(item => ({
-                productId: item.productId?._id || item.product_id || item._id,
+                product_id: item.product_id?._id || item.product_id || item._id,
                 quantity: item.quantity,
                 price: item.productId?.price || item.price || 0
             }));
 
-            // ૪. ઓર્ડર ક્રિએટ કરો (બધા સ્પેલિંગ સ્કીમા મુજબ છે)
+            // ૪. ઓર્ડર ક્રિએટ કરો
             const orderRes = await axios.post("/orderApi/order", {
                 cartItems: cleanedCartItems,
-                total_amount: Number(totalAmount), // સ્કીમા મુજબ total_amount
+                total_amount: Number(totalAmount),
                 shippingAddress: {
-                    address: address.address, // સ્ટેટમાંથી address ફિલ્ડ
+                    address: address.address,
                     city: address.city,
                     pincode: String(address.pincode),
                     phone: String(address.phone)
@@ -89,11 +89,12 @@ export const Checkout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6 md:p-12">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="min-h-screen bg-gray-100 p-4 md:p-12">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <div className="space-y-6">
-                    <div className="bg-white p-8 shadow-xl rounded-2xl">
+                {/* Left Side: Address & Payment Form */}
+                <div className="lg:col-span-2 space-y-6">
+                    <div className="bg-white p-6 md:p-8 shadow-xl rounded-2xl">
                         <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Delivery Address</h2>
                         <form onSubmit={handleConfirmOrder} className="space-y-4">
                             <input name="fullName" value={address.fullName} onChange={handleChange} placeholder="Full Name" className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-pink-500" required />
@@ -119,7 +120,7 @@ export const Checkout = () => {
                             </div>
                             
                             <div className="pt-4">
-                                <button type="submit" className="w-full bg-pink-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-pink-700 shadow-lg">
+                                <button type="submit" className="w-full bg-pink-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-pink-700 shadow-lg transition-all">
                                     Confirm Order (₹{totalAmount})
                                 </button>
                             </div>
@@ -127,15 +128,71 @@ export const Checkout = () => {
                     </div>
                 </div>
 
-                <div className="bg-white p-8 shadow-xl rounded-2xl h-fit">
-                    <h3 className="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Order Summary</h3>
-                    {/* ... (બાકીનો Summary કોડ તમે જે રાખ્યો હતો તે જ આવશે) ... */}
-                    <div className="flex justify-between text-2xl font-extrabold text-pink-600 pt-2 border-t">
-                        <span>Total</span>
-                        <span>₹{totalAmount}</span>
+                {/* Right Side: Order Summary */}
+              <div className="lg:col-span-1">
+    <div className="bg-white p-6 shadow-xl rounded-2xl sticky top-6 border border-pink-50">
+        <h3 className="text-xl font-bold mb-6 text-gray-800 border-b pb-2">Order Summary</h3>
+        
+        {/* Cart Items List */}
+        <div className="space-y-4 mb-6 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+            {cartItems && cartItems.map((item, index) => {
+                // તમારા સ્કીમા મુજબ product_id (અન્ડરસ્કોર) વાપરો
+                const product = item.product_id || {};
+                
+                // પ્રોડક્ટની વિગતો (તમારા Product Model મુજબ ફિલ્ડના નામ ચેક કરી લેવા)
+                const name = product.productName || product.name || "Product";
+                const image = product.productImage || product.image || "";
+                const price = product.price || item.price || 0;
+
+                return (
+                    <div key={index} className="flex justify-between items-center gap-4 border-b border-gray-50 pb-3">
+                        <div className="flex items-center gap-3">
+                            <div className="w-14 h-14 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden border border-gray-200">
+                                <img 
+                                    src={image || "https://via.placeholder.com/150"} 
+                                    alt={name} 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.src = "https://via.placeholder.com/150" }}
+                                />
+                            </div>
+                            <div>
+                                <p className="font-bold text-gray-800 text-sm line-clamp-1">{name}</p>
+                                <p className="text-xs text-gray-500 font-medium">Qty: {item.quantity}</p>
+                            </div>
+                        </div>
+                        <p className="font-semibold text-gray-700 text-sm">
+                            ₹{price * item.quantity}
+                        </p>
                     </div>
-                </div>
+                );
+            })}
+        </div>
+
+        {/* Price Details */}
+        <div className="border-t pt-4 space-y-3">
+            <div className="flex justify-between text-gray-600 font-medium">
+                <span>Subtotal</span>
+                <span>₹{totalAmount}</span>
             </div>
+            <div className="flex justify-between text-gray-600 font-medium">
+                <span>Shipping</span>
+                <span className="text-green-600">Free</span>
+            </div>
+            
+            <div className="flex justify-between text-2xl font-black text-pink-600 pt-4 border-t mt-2">
+                <span>Total</span>
+                <span>₹{totalAmount}</span>
+            </div>
+        </div>
+
+        <div className="mt-6 p-3 bg-pink-50 rounded-lg border border-pink-100">
+            <p className="text-[10px] text-center text-pink-400 uppercase tracking-widest font-bold">
+                100% Secure Checkout
+            </p>
+        </div>
+    </div>
+</div>
+</div>
         </div>
     );
 };
