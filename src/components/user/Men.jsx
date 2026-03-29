@@ -4,16 +4,20 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Men = () => {
-
   const [products, setProducts] = useState([]);
+  const [activeFilter, setActiveFilter] = useState("All"); 
+  const [selectedSizes, setSelectedSizes] = useState([]); // સાઈઝ સ્ટેટ
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const allSizes = ["S", "M", "L", "XL", "XXL", "28", "30", "32", "34", "36"];
+
   useEffect(() => {
-    axios.get("productApi/products",{
-       headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-  })
+    axios.get("productApi/products", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
       .then((res) => {
         setProducts(res.data.data);
       })
@@ -22,77 +26,147 @@ const Men = () => {
       });
   }, []);
 
+  const handleSizeClick = (size) => {
+    if (selectedSizes.includes(size)) {
+      setSelectedSizes(selectedSizes.filter((s) => s !== size));
+    } else {
+      setSelectedSizes([...selectedSizes, size]);
+    }
+  };
+
+  // ✅ Add to Cart ફંક્શન પાછું એડ કર્યું
   const handleAddToCart = async (productId) => {
     try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Please login first!"); 
-            
-            navigate("/login");
-            return;
-        }
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Please login first!");
+        navigate("/login");
+        return;
+      }
 
-        const res = await axios.post("/cartApi/cart", 
-            { 
-                product_id: productId, 
-                quantity: 1 
-            }, 
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-        );
-
-        if (res.status === 201 || res.status === 200) {
-            console.log("Cart updated:", res.data);
-            if (typeof toast !== 'undefined') {
-                toast.success("Product added to cart! 🛒");
-            } else {
-                alert("Product added to cart!");
-            }
-            navigate("/user/cartpage");
+      const res = await axios.post("/cartApi/cart",
+        {
+          product_id: productId,
+          quantity: 1
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
         }
+      );
+
+      if (res.status === 201 || res.status === 200) {
+        toast.success("Product added to cart! 🛒");
+        navigate("/user/cartpage");
+      }
     } catch (err) {
-        console.error("Add to cart error:", err.response || err);
-        if (err.response && err.response.status === 404) {
-            alert("API Path not found (404). Please check your Backend Routes.");
-        }
+      console.error("Add to cart error:", err.response || err);
+      toast.error("Failed to add to cart");
     }
-};
-  // ✅ filter correct
-  const menProducts = products.filter(
-    (product) => product.categoryId?.name === "Men"
-  );
+  };
+
+  // ✅ Filter Logic
+const filteredProducts = products.filter((product) => {
+  const isMen = product.categoryId?.name === "Men";
+
+  // .trim() વાપરવાથી "Jeans " અને "Jeans" બંને મેચ થઈ જશે
+  const matchesCategory = activeFilter === "All" || 
+    product.subCategoryId?.name?.trim() === activeFilter.trim();
+
+  const matchesSize = selectedSizes.length === 0 || 
+    product.sizes?.some(size => selectedSizes.includes(size));
+
+  return isMen && matchesCategory && matchesSize;
+});
 
   return (
     <div className="bg-[#FFF0F5] min-h-screen p-6">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Men Collection</h1>
 
-      <h1 className="text-2xl font-bold mb-6">Men Collection</h1>
- 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-        {menProducts.map((product) => (
-          <div key={product._id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
-
-            <img
-              src={product.image?.[0] || "/placeholder.jpg"}
-              alt={product.name}
-              className="w-full h-64 object-cover rounded-t-xl"
-            />
-
-            <div className="p-4">
-              <h2 className="text-sm font-semibold">{product.name}</h2>
-              <p className="text-pink-500 font-bold">₹{product.price}</p>
-
+      <div className="flex flex-col md:flex-row gap-6">
+        
+        {/* --- Sidebar Filter --- */}
+        <div className="w-full md:w-64 bg-white p-5 rounded-xl shadow-sm h-fit border border-pink-100 sticky top-5">
+          <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Sub Categories</h3>
+          <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
+            {["All", "Jeans", "Shirt", "T Shirt", "Hoodie", "Jacket"].map((item) => (
               <button
-                onClick={() => handleAddToCart(product._id)}
-                className="mt-3 w-full bg-pink-500 text-white py-1 rounded hover:bg-pink-600" >
-                Add to Cart
+                key={item}
+                onClick={() => setActiveFilter(item)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all text-left whitespace-nowrap ${
+                  activeFilter === item ? "bg-[#ff3f6c] text-white shadow-md" : "bg-white text-gray-600 hover:bg-pink-50 border border-gray-50"
+                }`}
+              >
+                {item}
               </button>
-            </div>
-
+            ))}
           </div>
-        ))}
 
+          <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Filter By Size</h3>
+          <div className="grid grid-cols-3 gap-2">
+            {allSizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => handleSizeClick(size)}
+                className={`py-2 rounded-md text-xs font-bold border transition-all ${
+                  selectedSizes.includes(size)
+                    ? "border-[#ff3f6c] bg-pink-50 text-[#ff3f6c]"
+                    : "border-gray-200 text-gray-400 bg-white hover:border-pink-300"
+                }`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          {selectedSizes.length > 0 && (
+            <button 
+              onClick={() => setSelectedSizes([])}
+              className="mt-4 w-full text-[11px] text-red-400 font-bold uppercase tracking-tighter hover:underline"
+            >
+              Reset Sizes
+            </button>
+          )}
+        </div>
+
+        {/* --- Products Grid --- */}
+        <div className="flex-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            {filteredProducts.map((product) => (
+              <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
+                <div className="aspect-[3/4] w-full overflow-hidden bg-gray-50">
+                  <img src={product.image?.[0] || "/placeholder.jpg"} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h2 className="text-sm font-semibold text-gray-700 truncate">{product.name}</h2>
+                  <p className="text-[#ff3f6c] font-bold text-lg mt-1">₹{product.price}</p>
+                  
+                  {/* નાની ચીપ્સમાં પ્રોડક્ટની અવેલેબલ સાઈઝ બતાવવા (Optional) */}
+                  <div className="flex gap-1 mt-1 mb-3">
+                      {product.sizes?.slice(0, 3).map(s => (
+                        <span key={s} className="text-[9px] font-bold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
+                          {s}
+                        </span>
+                      ))}
+                  </div>
+
+                  <button
+                    onClick={() => handleAddToCart(product._id)}
+                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors shadow-sm"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {filteredProducts.length === 0 && (
+              <div className="col-span-full text-center py-24 bg-white rounded-2xl border-2 border-dashed border-gray-100">
+                <p className="text-gray-400">Oops! No products found with these filters.</p>
+                <button onClick={() => {setActiveFilter("All"); setSelectedSizes([])}} className="mt-3 text-[#ff3f6c] font-bold hover:underline">Clear all filters</button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

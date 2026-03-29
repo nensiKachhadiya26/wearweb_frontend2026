@@ -4,7 +4,7 @@ import home from "../../assets/images/home.jpg";
 import men from "../../assets/images/men.png";
 import women from "../../assets/images/women.avif";
 import kids from "../../assets/images/kids.webp";
-import banner from "../../assets/images/banner.jpg";
+import banner1 from "../../assets/images/banner1.png";
 import watch from "../../assets/images/watch.jpg";
 import shose from "../../assets/images/shose.jpg";
 import lehnga from "../../assets/images/lehnga.jpg";
@@ -59,7 +59,7 @@ export const Home = () => {
       {/* Banner */}
       <div className="w-full rounded-lg overflow-hidden">
         <img
-          src={banner}
+          src={banner1}
           alt="Banner"
           className="w-full object-cover"
         />

@@ -4,10 +4,44 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 export const CreateProduct = () => {
-    const { register, handleSubmit, reset } = useForm()
+    const { register, handleSubmit, reset, watch } = useForm()
     const [categories, setcategories] = useState([])
     const [subCategories, setSubCategories] = useState([])
     const [loading, setLoading] = useState(false)
+
+    // ✅ તમારી રિક્વાયરમેન્ટ મુજબ સાઈઝ ડેટા
+    const sizeData = {
+        // Men & Women Common
+        "Jeans ": ["28", "30", "32", "34", "36", "38"],
+        "Shirt": ["S", "M", "L", "XL", "XXL"],
+        "T Shirt": ["S", "M", "L", "XL", "XXL"],
+        "Hoodie": ["S", "M", "L", "XL", "XXL"],
+        "Jacket": ["S", "M", "L", "XL", "XXL"],
+        
+        // Women Specific
+        "Kurti": ["S", "M", "L", "XL", "XXL"],
+        "Jeans ": ["28", "30", "32", "34", "36", "38"],
+        "Tops": ["S", "M", "L", "XL"],
+        "Skirt": ["26", "28", "30", "32"],
+        "Chappal": ["3", "4", "5", "6", "7", "8"],
+
+        // Kids Specific
+        "Dungaree": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "Jeans": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "TShirt": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "Frock": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        
+    };
+
+    
+    const selectedCategoryId = watch("categoryId");
+    const selectedSubCategoryId = watch("subCategoryId");
+
+
+    const filteredSubCategories = subCategories.filter(sub => sub.categoryId === selectedCategoryId);
+
+  
+    const selectedSubCategoryName = subCategories.find(sub => sub._id === selectedSubCategoryId)?.name;
 
     const submitHandler = async (data) => {
         setLoading(true)
@@ -19,9 +53,16 @@ export const CreateProduct = () => {
             formData.append("categoryId", data.categoryId)
             formData.append("subCategoryId", data.subCategoryId)
             
+            if (data.sizes) {
+                data.sizes.forEach(size => {
+                    formData.append("sizes", size)
+                })
+            }
+
             if (data.image[0]) {
                 formData.append("image", data.image[0])
             }
+            
             const token = localStorage.getItem("token");
             const res = await axios.post("/productApi/product", formData, {
                 headers: {
@@ -35,7 +76,6 @@ export const CreateProduct = () => {
                 reset()
             }
         } catch (err) {
-            console.error(err)
             toast.error(err.response?.data?.message || "Something went wrong!")
         } finally {
             setLoading(false)
@@ -46,7 +86,6 @@ export const CreateProduct = () => {
         try {
             const catRes = await axios.get("/categoryApi/categories")
             setcategories(catRes.data.data)
-            
             const subRes = await axios.get("/subCategoryApi/subCategories")
             setSubCategories(subRes.data.data)
         } catch (err) {
@@ -63,42 +102,65 @@ export const CreateProduct = () => {
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Add New Product</h2>
             
             <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
-                
-                {/* Name */}
+                {/* Product Name */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
                     <input className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" type='text' {...register("name")} required />
                 </div>
 
-                {/* Price */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                    <input className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" type='number' {...register("price")} required />
-                </div>
-
-                {/* Description */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition resize-none" rows="3" {...register("description")} required></textarea>
-                </div>
-
+                {/* Category & Filtered Sub Category */}
                 <div className="grid grid-cols-2 gap-4">
-                    {/* Category */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                         <select className='w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition cursor-pointer' {...register("categoryId")} required>
-                            <option value="">Select</option>
+                            <option value="">Select Category</option>
                             {categories.map(cat => <option key={cat._id} value={cat._id}>{cat.name}</option>)}
                         </select>
                     </div>
 
-                    {/* Sub Category */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Sub Category</label>
-                        <select className='w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition cursor-pointer' {...register("subCategoryId")}>
-                            <option value="">Select</option>
-                            {subCategories.map(sub => <option key={sub._id} value={sub._id}>{sub.name}</option>)}
+                        <select className='w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition cursor-pointer' {...register("subCategoryId")} required>
+                            <option value="">Select Sub</option>
+                            {filteredSubCategories.map(sub => <option key={sub._id} value={sub._id}>{sub.name}</option>)}
                         </select>
+                    </div>
+                </div>
+
+                {/* ✅ Dynamic Sizes - Sub Category ના નામ મુજબ */}
+                {selectedSubCategoryName && sizeData[selectedSubCategoryName] && (
+                    <div className="p-4 bg-pink-50 rounded-xl border border-dashed border-pink-200 shadow-inner">
+                        <label className="block text-sm font-bold text-pink-700 mb-3 uppercase tracking-wide">
+                             Sizes for {selectedSubCategoryName}
+                        </label>
+                        <div className="flex flex-wrap gap-3">
+                            {sizeData[selectedSubCategoryName].map((size) => (
+                                <label key={size} className="flex items-center space-x-2 cursor-pointer group bg-white px-3 py-1.5 rounded-lg border border-gray-200 hover:border-pink-400 transition shadow-sm active:scale-95">
+                                    <input 
+                                        type="checkbox" 
+                                        value={size} 
+                                        {...register("sizes")} 
+                                        className="w-4 h-4 accent-[#ff3f6c] cursor-pointer"
+                                    />
+                                    <span className="text-sm font-semibold text-gray-600 group-hover:text-[#ff3f6c]">
+                                        {size}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Price & Description */}
+                <div className="grid grid-cols-1 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                        <input className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" type='number' {...register("price")} required />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition resize-none" rows="3" {...register("description")} required></textarea>
                     </div>
                 </div>
 

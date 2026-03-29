@@ -7,6 +7,7 @@ export const SellerHome = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [totalOrder, setTotalOrder] = useState(0);
   const [revenue, setRevenue] = useState(0); // રેવન્યુ માટે નવું સ્ટેટ
+  const [pendingOrders, setPendingOrders] = useState([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -21,7 +22,7 @@ export const SellerHome = () => {
     }
 
     // ૨. ઓર્ડર્સ ફેચ કરો (અહીં ખાતરી કરો કે orderRes બરાબર લખ્યું છે)
-    const orderRes = await axios.get("/orderApi/order", { headers });
+    const orderRes = await axios.get("/orderApi/orders", { headers });
     
     // ચેક કરો કે orderRes માં ડેટા છે કે નહીં
     if (orderRes.data && orderRes.data.data) {
@@ -37,8 +38,22 @@ export const SellerHome = () => {
     console.error("Fetch error:", err); // એરર જોવા માટે
   }
 };
+    const fetchPending = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.get("/orderApi/recent-order", { // તમારો નવો રૂટ
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.data.success) {
+                setPendingOrders(res.data.data);
+            }
+        } catch (err) {
+            console.error("Error fetching pending orders");
+        }
+    };
 
     fetchDashboardData();
+    fetchPending()
   }, []);
 
   return (
@@ -75,7 +90,6 @@ export const SellerHome = () => {
         </div>
       </div>
 
-      {/* Recent Orders Table - હાલ પૂરતું સ્ટેટિક રાખ્યું છે જેમ તમે કહ્યું એમ */}
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
         <h2 className="text-xl font-bold mb-6 text-gray-800 border-b pb-4">
           Recent Orders
@@ -85,21 +99,37 @@ export const SellerHome = () => {
             <thead>
               <tr className="text-gray-400 text-sm uppercase tracking-wider">
                 <th className="py-3 px-2">Order ID</th>
+                <th className="py-3 px-2">Date</th>
                 <th className="py-3 px-2">Product</th>
                 <th className="py-3 px-2">Quantity</th>
                 <th className="py-3 px-2">Status</th>
               </tr>
             </thead>
-            <tbody className="text-gray-600">
-              <tr className="border-b border-gray-50 hover:bg-gray-50">
-                <td className="py-4 px-2 font-medium">#201</td>
-                <td className="py-4 px-2">T-shirt</td>
-                <td className="py-4 px-2">2</td>
-                <td className="py-4 px-2">
-                   <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold">Delivered</span>
+           <tbody className="text-gray-600">
+    {pendingOrders.length > 0 ? (
+        pendingOrders.map((order, index) => (
+            <tr key={index} className="border-b border-gray-50">
+                <td className="py-4 px-6 font-medium text-blue-600">
+                    #{order.order_id.slice(-6)}
                 </td>
-              </tr>
-            </tbody>
+                <td className="py-4 px-2 text-sm">{new Date(order.createdAt).toLocaleDateString()}</td>
+                <td className="py-4 px-6">{order.product_name}</td>
+                <td className="py-4 px-6 text-center">{order.quantity}</td>
+                <td className="py-4 px-6">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-600">
+                        {order.status}
+                    </span>
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan="4" className="text-center py-10 text-gray-400">
+                No pending orders found.
+            </td>
+        </tr>
+    )}
+</tbody>
           </table>
         </div>
       </div>

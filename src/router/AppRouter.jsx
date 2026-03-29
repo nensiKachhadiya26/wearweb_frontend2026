@@ -31,6 +31,8 @@ import OrderDetail from "../components/user/OrderDetail";
 import Accessories from "../components/user/Accessories";
 import SellerOrder from "../components/seller/SellerOrder";
 import SellerOrderDetails from "../components/seller/SellerOrderDetails";
+import ViewSale from "../components/admin/ViewSale";
+import SearchPage from "../components/user/SearchPage";
 
 
 const router = createBrowserRouter([
@@ -48,7 +50,7 @@ const router = createBrowserRouter([
            {path:'manage-user',element:<ManageUser/>},
            { path: 'manage-seller', element: <ManageSeller /> },
            { path: 'approve-products', element: <ApproveProducts /> },
-            // { path: 'view-sales', element: <ViewSale/> },
+           {path:'view-sales',element:<ViewSale/>},
             // { path: 'reviews', element: <Reviews /> },
         ]
         
@@ -70,7 +72,8 @@ const router = createBrowserRouter([
            {path:'checkout',element:<Checkout/>},
            {path:'thankyou',element:<ThankYou/>},
            {path:'orderhistory',element:<OrderHistory/>},
-           { path: 'order-detail/:id', element: <OrderDetail /> }
+           { path: 'order-detail/:id', element: <OrderDetail /> },
+           {path:'search',element:<SearchPage/>}
         ]        
     },
     {
