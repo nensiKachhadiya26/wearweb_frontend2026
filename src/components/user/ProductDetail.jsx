@@ -1,204 +1,169 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { FaStar, FaShoppingCart, FaUserCircle, FaPaperPlane } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const ProductDetail = () => {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedSize, setSelectedSize] = useState("");
-  const navigate = useNavigate();
+    const { id } = useParams();
+    const navigate = useNavigate();
+    
+    const [product, setProduct] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState("");
 
-  useEffect(() => {
-    // API call to fetch single product details
-    axios
-      .get(`/productApi/product/${id}`)
-      .then((res) => {
-        setProduct(res.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching product:", err);
-        toast.error("Product details fetch karva ma bhul thai!");
-        setLoading(false);
-      });
-  }, [id]);
-
-  const handleAddToCart = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("Maherbani kari ne pehla Login karo!");
-      navigate("/login");
-      return;
-    }
-
-    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      toast.warn("Maherbani kari ne size select karo!");
-      return;
-    }
-
-    try {
-      const res = await axios.post(
-        "/cartApi/cart",
-        {
-          product_id: product._id,
-          quantity: 1,
-          size: selectedSize, // Selected size cart ma mokalva mate
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+    const loadData = async () => {
+        try {
+            setLoading(true);
+            const pRes = await axios.get(`/productApi/product/${id}`);
+            setProduct(pRes.data.data);
+            const rRes = await axios.get(`/reviewApi/product/${id}`);
+            setReviews(rRes.data.data || []);
+        } catch (err) {
+            toast.error("પ્રોડક્ટ લોડ કરવામાં ભૂલ આવી!");
+        } finally {
+            setLoading(false);
         }
-      );
+    };
 
-      if (res.status === 201 || res.status === 200) {
-        toast.success("Product cart ma add thai gayu! 🛒");
-        navigate("/user/cartpage");
-      }
-    } catch (err) {
-      console.error("Cart error:", err);
-      toast.error("Cart ma add karva ma kaik vandho aavyo.");
-    }
-  };
+    useEffect(() => { if (id) loadData(); }, [id]);
 
-  if (loading) {
+    const handleAddToCart = async (productId) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) { toast.error("Please login first! 🔐"); return; }
+
+            const res = await axios.post("/cartApi/cart", { 
+                product_id: productId, 
+                quantity: 1
+            }, { headers: { Authorization: `Bearer ${token}` } });
+
+            if (res.status === 201 || res.status === 200) {
+                toast.success('Product added! 🛒');
+                setTimeout(() => navigate('/user/cartpage'), 500);
+            }
+        } catch (error) {
+            toast.error("Error adding to cart");
+        }
+    };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const token = localStorage.getItem("token");
+            if (!token || !comment.trim()) { toast.error("Check login or comment!"); return; }
+
+            const res = await axios.post("/reviewApi/add", {
+                productId: id, rating, comment
+            }, { headers: { Authorization: `Bearer ${token}` } });
+
+            if (res.status === 201 || res.status === 200) {
+                toast.success('Review added!');
+                setComment(""); setRating(5); loadData();
+            }
+        } catch (error) { toast.error("Error submitting review"); }
+    };
+
+    if (loading) return <div className="p-10 text-center text-pink-600 font-bold">Loading...</div>;
+    if (!product) return <div className="p-10 text-center text-red-500">Not Found!</div>;
+
+    const imageUrl = product.image?.[0]?.startsWith('http') 
+        ? product.image[0] 
+        : `http://localhost:3000/${product.image?.[0]?.replace(/\\/g, '/')}`;
+
     return (
-      <div className="flex flex-col justify-center items-center h-screen bg-[#FFF0F5]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff3f6c]"></div>
-        <p className="mt-4 text-[#ff3f6c] font-medium">Loading Product...</p>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="text-center mt-20">
-        <h2 className="text-2xl font-bold text-gray-700">Product male nathi!</h2>
-        <button 
-          onClick={() => navigate(-1)} 
-          className="mt-4 text-[#ff3f6c] underline"
-        >
-          Pacha jao
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-[#FFF0F5] min-h-screen pb-12">
-      <div className="max-w-7xl mx-auto p-4 md:p-10">
-        
-        {/* Breadcrumb - Optional */}
-        <div className="mb-6 text-sm text-gray-500">
-           Home / {product.categoryId?.name} / <span className="text-gray-800 font-semibold">{product.name}</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16 items-start">
-          
-          {/* --- LEFT SIDE: IMAGE SECTION --- */}
-          <div className="md:col-span-7 lg:col-span-6 group">
-            <div className="sticky top-24 overflow-hidden rounded-3xl bg-white shadow-2xl border border-pink-100">
-              <img
-                src={product.image?.[0] || "/placeholder.jpg"}
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                style={{ maxHeight: '750px' }}
-                alt={product.name}
-              />
-            </div>
-          </div>
-
-          {/* --- RIGHT SIDE: CONTENT SECTION --- */}
-          <div className="md:col-span-5 lg:col-span-6 space-y-8 py-4">
+        <div className="max-w-5xl mx-auto p-4 font-sans text-sm md:text-base">
             
-            {/* Title & Brand */}
-            <div className="border-b border-pink-100 pb-6">
-              <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
-                {product.name}
-              </h1>
-              <p className="text-xl text-[#ff3f6c] font-semibold mt-3 tracking-wide uppercase">
-                {product.categoryId?.name || "Premium Wear"}
-              </p>
-            </div>
-
-            {/* Price Section */}
-            <div className="flex items-center gap-4">
-              <span className="text-4xl font-black text-gray-900">₹{product.price}</span>
-              <div className="flex flex-col">
-                <span className="text-green-600 font-bold text-sm bg-green-50 px-2 py-0.5 rounded">Special Offer</span>
-                <span className="text-gray-400 text-xs">Inclusive of all taxes</span>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                <span className="w-1 h-5 bg-[#ff3f6c] rounded-full"></span>
-                Product Details
-              </h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
-                {product.description || "Aa product khub j unchi quality na material mathi banavel che je tamne comfort ane style banne apshe."}
-              </p>
-            </div>
-
-            {/* Size Selection Logic */}
-            {product.sizes && product.sizes.length > 0 && (
-              <div className="space-y-4 pt-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-bold text-gray-800 uppercase tracking-widest">Select Size</h3>
-                  <span className="text-xs text-[#ff3f6c] font-bold cursor-pointer underline">Size Chart</span>
+            {/* --- Product Main Section --- */}
+            <div className="flex flex-col md:flex-row gap-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                
+                {/* Image: md:w-1/3 (નાનો ભાગ) */}
+                <div className="w-full md:w-1/3 flex items-center justify-center bg-gray-50 rounded-xl p-4">
+                    <img 
+                        src={imageUrl} 
+                        alt={product.productName} 
+                        className="max-h-64 md:max-h-80 w-auto object-contain rounded-lg mix-blend-multiply transition-transform hover:scale-105" 
+                    />
                 </div>
-                <div className="flex flex-wrap gap-4">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center font-bold transition-all duration-300 border-2 ${
-                        selectedSize === size
-                          ? "border-[#ff3f6c] bg-[#ff3f6c] text-white shadow-lg scale-110"
-                          : "border-gray-200 bg-white text-gray-700 hover:border-pink-300 hover:text-[#ff3f6c]"
-                      }`}
+
+                {/* Details: md:w-2/3 (મોટો ભાગ) */}
+                <div className="w-full md:w-2/3 flex flex-col justify-center space-y-4">
+                    <h1 className="text-2xl font-bold text-gray-800 tracking-tight">{product.productName}</h1>
+                    <div className="text-2xl font-black text-[#ff3f6c]">₹{product.price}</div>
+                    <p className="text-gray-500 leading-snug border-l-2 border-pink-200 pl-3">
+                        {product.description || "કોઈ ડિસ્ક્રિપ્શન ઉપલબ્ધ નથી."}
+                    </p>
+                    
+                    <button 
+                        onClick={() => handleAddToCart(product._id)}
+                        className="w-full md:w-48 bg-[#ff3f6c] hover:bg-[#e0375f] text-white py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-md"
                     >
-                      {size}
+                        <FaShoppingCart size={16} /> Add to Cart
                     </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* --- ACTION BUTTONS --- */}
-            <div className="flex flex-col sm:flex-row gap-5 pt-8">
-              <button
-                onClick={handleAddToCart}
-                className="flex-[2] bg-[#ff3f6c] text-white px-10 py-5 rounded-2xl font-black text-xl hover:bg-[#e6335f] shadow-xl shadow-pink-200 transition-all active:scale-95 flex items-center justify-center gap-3"
-              >
-                <span className="text-2xl">🛒</span> ADD TO CART
-              </button>
-
-              <button
-                onClick={() => toast.info("Checkout process jald hi aavse!")}
-                className="flex-1 bg-gray-900 text-white px-10 py-5 rounded-2xl font-black text-xl hover:bg-black transition-all active:scale-95 shadow-xl shadow-gray-200"
-              >
-                BUY NOW
-              </button>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 pt-8 border-t border-pink-100">
-                <div className="flex items-center gap-3 text-xs font-semibold text-gray-500">
-                    <span className="bg-pink-100 p-2 rounded-full text-[#ff3f6c]">🚚</span>
-                    Fast Delivery
-                </div>
-                <div className="flex items-center gap-3 text-xs font-semibold text-gray-500">
-                    <span className="bg-pink-100 p-2 rounded-full text-[#ff3f6c]">🔄</span>
-                    7 Days Return
                 </div>
             </div>
 
-          </div>
+            {/* --- Review Section --- */}
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Review Form (Compact) */}
+                <div className="md:col-span-1 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-fit">
+                    <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-[#ff3f6c] rounded-full"></span> Write Review
+                    </h4>
+                    <form onSubmit={handleReviewSubmit} className="space-y-3">
+                        <div>
+                            <label className="text-xs font-semibold text-gray-500">Rating:</label>
+                            <div className="flex gap-1 mt-1">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                    <button key={s} type="button" onClick={() => setRating(s)}>
+                                        <FaStar size={18} className={s <= rating ? "text-yellow-400" : "text-gray-200"} />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <textarea 
+                            rows="3"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder="તમારો અનુભવ લખો..."
+                            className="w-full p-3 text-sm border border-gray-100 rounded-lg focus:ring-1 focus:ring-pink-200 outline-none bg-gray-50"
+                        />
+                        <button type="submit" className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
+                            <FaPaperPlane size={12} /> Submit
+                        </button>
+                    </form>
+                </div>
+
+                {/* Review List */}
+                <div className="md:col-span-2 space-y-4">
+                    <h3 className="text-xl font-bold text-gray-800 border-b-2 border-[#ff3f6c] w-fit pb-1 mb-4">Reviews</h3>
+                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        {reviews.length > 0 ? reviews.map((r, i) => (
+                            <div key={i} className="bg-white p-4 rounded-xl border border-gray-50 shadow-sm">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <FaUserCircle size={24} className="text-pink-200" />
+                                        <span className="font-bold text-xs text-gray-700">
+                                            {r.userId?.firstName || "Customer"}
+                                        </span>
+                                    </div>
+                                    <div className="flex text-yellow-400 gap-0.5">
+                                        {[...Array(5)].map((_, idx) => (
+                                            <FaStar key={idx} size={10} className={idx < r.rating ? "fill-current" : "text-gray-100"} />
+                                        ))}
+                                    </div>
+                                </div>
+                                <p className="text-gray-600 text-sm italic">"{r.comment}"</p>
+                            </div>
+                        )) : <p className="text-gray-400 text-sm italic">No reviews yet.</p>}
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ProductDetail;

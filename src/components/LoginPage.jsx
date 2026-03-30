@@ -108,11 +108,19 @@ export const LoginPage = () => {
 
           {/* Extra Links */}
           <p className="text-sm text-center text-gray-600 mt-6">
-            Don't have an account? 
+            Don't have an account ? 
             <Link to="/signup" className="text-purple-600 font-semibold hover:underline ml-1">
               Sign Up
             </Link>
           </p>
+          
+          <p className="text-sm text-center text-gray-600 mt-6">
+            Forgot Password ??{" "}
+            <Link to="/forgotpassword" className="text-purple-600 font-semibold hover:underline ml-1">
+              FORGOT PASSWORD
+            </Link>
+          </p>
+          
         </div>
 
       </div>

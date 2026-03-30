@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const Men = () => {
   const [products, setProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All"); 
-  const [selectedSizes, setSelectedSizes] = useState([]); // સાઈઝ સ્ટેટ
+  const [selectedSizes, setSelectedSizes] = useState([]); 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -34,7 +34,6 @@ const Men = () => {
     }
   };
 
-  // ✅ Add to Cart ફંક્શન પાછું એડ કર્યું
   const handleAddToCart = async (productId) => {
     try {
       const token = localStorage.getItem("token");
@@ -64,19 +63,15 @@ const Men = () => {
     }
   };
 
-  // ✅ Filter Logic
-const filteredProducts = products.filter((product) => {
-  const isMen = product.categoryId?.name === "Men";
+  const filteredProducts = products.filter((product) => {
+    const isMen = product.categoryId?.name === "Men";
+    const matchesCategory = activeFilter === "All" || 
+      product.subCategoryId?.name?.trim() === activeFilter.trim();
+    const matchesSize = selectedSizes.length === 0 || 
+      product.sizes?.some(size => selectedSizes.includes(size));
 
-  // .trim() વાપરવાથી "Jeans " અને "Jeans" બંને મેચ થઈ જશે
-  const matchesCategory = activeFilter === "All" || 
-    product.subCategoryId?.name?.trim() === activeFilter.trim();
-
-  const matchesSize = selectedSizes.length === 0 || 
-    product.sizes?.some(size => selectedSizes.includes(size));
-
-  return isMen && matchesCategory && matchesSize;
-});
+    return isMen && matchesCategory && matchesSize;
+  });
 
   return (
     <div className="bg-[#FFF0F5] min-h-screen p-6">
@@ -133,14 +128,30 @@ const filteredProducts = products.filter((product) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
               <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
-                <div className="aspect-[3/4] w-full overflow-hidden bg-gray-50">
-                  <img src={product.image?.[0] || "/placeholder.jpg"} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                
+                {/* 1. IMAGE - CLICKABLE */}
+                <div 
+                  className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
+                  onClick={() => navigate(`/user/productdetail/${product._id}`)}
+                >
+                  <img 
+                    src={product.image?.[0] || "/placeholder.jpg"} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
                 </div>
+
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-sm font-semibold text-gray-700 truncate">{product.name}</h2>
+                  {/* 2. NAME - CLICKABLE */}
+                  <h2 
+                    className="text-sm font-semibold text-gray-700 truncate cursor-pointer hover:text-[#ff3f6c] transition-colors"
+                    onClick={() => navigate(`/productdetail/${product._id}`)}
+                  >
+                    {product.name}
+                  </h2>
+
                   <p className="text-[#ff3f6c] font-bold text-lg mt-1">₹{product.price}</p>
                   
-                  {/* નાની ચીપ્સમાં પ્રોડક્ટની અવેલેબલ સાઈઝ બતાવવા (Optional) */}
                   <div className="flex gap-1 mt-1 mb-3">
                       {product.sizes?.slice(0, 3).map(s => (
                         <span key={s} className="text-[9px] font-bold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
