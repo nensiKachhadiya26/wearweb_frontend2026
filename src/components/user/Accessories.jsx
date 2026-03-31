@@ -95,8 +95,11 @@ const Accessories = () => {
                 key={product._id}
                 className="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col"
               >
-                <div className="aspect-[3/4] w-full overflow-hidden bg-gray-100">
-                  <img
+                <div 
+                  className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
+                  onClick={() => navigate(`/user/productdetail/${product._id}`)}
+                >                 
+                 <img
                     src={product.image?.[0] || "/placeholder.jpg"}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -113,7 +116,7 @@ const Accessories = () => {
 
                   <button
                     onClick={() => handleAddToCart(product._id)}
-                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2 rounded-lg font-medium hover:bg-pink-600 transition-colors"
+                    className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2 rounded-lg font-medium hover:bg-pink-600 transition-colors"
                   >
                     Add to Cart
                   </button>

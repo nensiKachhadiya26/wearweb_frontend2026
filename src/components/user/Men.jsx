@@ -142,10 +142,9 @@ const Men = () => {
                 </div>
 
                 <div className="p-4 flex flex-col flex-grow">
-                  {/* 2. NAME - CLICKABLE */}
+                
                   <h2 
-                    className="text-sm font-semibold text-gray-700 truncate cursor-pointer hover:text-[#ff3f6c] transition-colors"
-                    onClick={() => navigate(`/productdetail/${product._id}`)}
+                    className="text-sm font-semibold text-gray-700 truncate  hover:text-[#ff3f6c] transition-colors"
                   >
                     {product.name}
                   </h2>
@@ -162,7 +161,7 @@ const Men = () => {
 
                   <button
                     onClick={() => handleAddToCart(product._id)}
-                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors shadow-sm"
+                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2.5  cursor-pointer rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors shadow-sm"
                   >
                     Add to Cart
                   </button>

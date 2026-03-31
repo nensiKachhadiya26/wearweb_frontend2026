@@ -57,7 +57,7 @@ const router = createBrowserRouter([
            { path: 'manage-seller', element: <ManageSeller /> },
            { path: 'approve-products', element: <ApproveProducts /> },
            {path:'view-sales',element:<ViewSale/>},
-            {path:'review',element:<Review/>}
+            {path:'reviews',element:<Review/>}
         ]
         
     },

@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 const Women = () => {
   const [products, setProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [selectedSizes, setSelectedSizes] = useState([]); // ✅ સાઈઝ સ્ટેટ
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Women માટેની બધી શક્ય સાઈઝનું લિસ્ટ
   const allSizes = ["S", "M", "L", "XL", "XXL", "26", "28", "30", "32", "34", "3", "4", "5", "6", "7", "8"];
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const Women = () => {
       });
   }, []);
 
-  // સાઈઝ સિલેક્ટ કરવાનું લોજિક
   const handleSizeClick = (size) => {
     if (selectedSizes.includes(size)) {
       setSelectedSizes(selectedSizes.filter((s) => s !== size));
@@ -64,16 +62,13 @@ const Women = () => {
     }
   };
 
-  // ✅ Category + Sub-category + Size Filter Logic
   const filteredProducts = products.filter((product) => {
     const isWomen = product.categoryId?.name === "Women";
     
-    // ૧. સબ-કેટેગરી ફિલ્ટર (Kurti, Top, etc.)
     const matchesCategory = activeFilter === "All" || 
       product.name.toLowerCase().includes(activeFilter.toLowerCase()) ||
       product.subCategoryId?.name?.toLowerCase() === activeFilter.toLowerCase();
 
-    // ૨. સાઈઝ ફિલ્ટર
     const matchesSize = selectedSizes.length === 0 || 
       product.sizes?.some(size => selectedSizes.includes(size));
 
@@ -85,10 +80,8 @@ const Women = () => {
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Women Collection</h1>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* --- Sidebar Filter Start --- */}
+        {/* --- Sidebar Filter --- */}
         <div className="w-full md:w-64 bg-white p-5 rounded-xl shadow-sm h-fit border border-pink-100 sticky top-5">
-          
-          {/* Sub-Category Filter */}
           <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Categories</h3>
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
             {["All", "Kurti", "Top", "Skirt", "Jeans", "Chappal"].map((item) => (
@@ -106,7 +99,6 @@ const Women = () => {
             ))}
           </div>
 
-          {/* ✅ Size Filter Section */}
           <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Select Size</h3>
           <div className="grid grid-cols-4 gap-2">
             {allSizes.map((size) => (
@@ -133,21 +125,35 @@ const Women = () => {
             </button>
           )}
         </div>
-        {/* --- Sidebar Filter End --- */}
 
-        {/* --- Products Grid Start --- */}
+        {/* --- Products Grid --- */}
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
               <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
-                <div className="aspect-[3/4] w-full overflow-hidden bg-gray-50">
-                  <img src={product.image?.[0] || "/placeholder.jpg"} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                
+                {/* 1. IMAGE - CLICKABLE */}
+                <div 
+                  className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
+                  onClick={() => navigate(`/user/productdetail/${product._id}`)}
+                >
+                  <img 
+                    src={product.image?.[0] || "/placeholder.jpg"} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
                 </div>
+
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-sm font-semibold text-gray-700 truncate">{product.name}</h2>
+                 
+                  <h2 
+                    className="text-sm font-semibold text-gray-700 truncate  hover:text-[#ff3f6c] transition-colors"
+                  >
+                    {product.name}
+                  </h2>
+
                   <p className="text-[#ff3f6c] font-bold text-lg mt-1">₹{product.price}</p>
                   
-                  {/* સાઈઝ હિન્ટ */}
                   <div className="flex flex-wrap gap-1 mt-1 mb-3">
                       {product.sizes?.slice(0, 4).map(s => (
                         <span key={s} className="text-[9px] font-bold bg-gray-100 text-gray-400 px-1 rounded">
@@ -158,7 +164,7 @@ const Women = () => {
 
                   <button
                     onClick={() => handleAddToCart(product._id)}
-                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors shadow-sm"
+                    className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors shadow-sm"
                   >
                     Add to Cart
                   </button>
@@ -168,13 +174,12 @@ const Women = () => {
 
             {filteredProducts.length === 0 && (
               <div className="col-span-full text-center py-24 bg-white rounded-2xl border-2 border-dashed border-gray-100">
-                <p className="text-gray-400">AA category ma size available nathi.</p>
+                <p className="text-gray-400">Oops! No products found with these filters.</p>
                 <button onClick={() => {setActiveFilter("All"); setSelectedSizes([])}} className="mt-3 text-[#ff3f6c] font-bold hover:underline">Reset All Filters</button>
               </div>
             )}
           </div>
         </div>
-        {/* --- Products Grid End --- */}
       </div>
     </div>
   );

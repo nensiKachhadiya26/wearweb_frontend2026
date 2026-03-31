@@ -139,7 +139,10 @@ const Kids = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
               <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
-                <div className="aspect-[3/4] w-full overflow-hidden bg-gray-50">
+                <div 
+                  className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
+                  onClick={() => navigate(`/user/productdetail/${product._id}`)}
+                >
                   <img src={product.image?.[0] || "/placeholder.jpg"} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-4 flex flex-col flex-grow">
@@ -156,7 +159,7 @@ const Kids = () => {
 
                   <button
                     onClick={() => handleAddToCart(product._id)}
-                    className="mt-auto w-full bg-[#ff3f6c] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors"
+                    className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors"
                   >
                     Add to Cart
                   </button>
@@ -166,7 +169,7 @@ const Kids = () => {
 
             {filteredProducts.length === 0 && (
               <div className="col-span-full text-center py-24 bg-white rounded-2xl border-2 border-dashed border-gray-100">
-                <p className="text-gray-400">AA category ma size available nathi.</p>
+                <p className="text-gray-400">Oops! No products found with these filters.</p>
                 <button onClick={() => {setActiveFilter("All"); setSelectedSizes([])}} className="mt-3 text-[#ff3f6c] font-bold hover:underline">Clear all filters</button>
               </div>
             )}
