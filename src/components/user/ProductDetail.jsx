@@ -93,7 +93,7 @@ const ProductDetail = () => {
                     <h1 className="text-2xl font-bold text-gray-800 tracking-tight">{product.productName}</h1>
                     <div className="text-2xl font-black text-[#ff3f6c]">₹{product.price}</div>
                     <p className="text-gray-500 leading-snug border-l-2 border-pink-200 pl-3">
-                        {product.description || "કોઈ ડિસ્ક્રિપ્શન ઉપલબ્ધ નથી."}
+                        {product.description || "No Description Available."}
                     </p>
                     
                     <button 
@@ -128,7 +128,7 @@ const ProductDetail = () => {
                             rows="3"
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            placeholder="તમારો અનુભવ લખો..."
+                            placeholder="Share your experience..."
                             className="w-full p-3 text-sm border border-gray-100 rounded-lg focus:ring-1 focus:ring-pink-200 outline-none bg-gray-50"
                         />
                         <button type="submit" className="w-full bg-gray-800 text-white py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2">

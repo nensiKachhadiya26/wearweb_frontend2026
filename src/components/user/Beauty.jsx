@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const Beauty = () => {
   const [products, setProducts] = useState([]);
-  const [activeFilter, setActiveFilter] = useState("All"); // ✅ Filter state add karyu
+  const [activeFilter, setActiveFilter] = useState("All");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Beauty = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Please login first!");
+        toast.error("Please login first!");
         navigate("/login");
         return;
       }
@@ -42,97 +42,102 @@ const Beauty = () => {
       );
 
       if (res.status === 201 || res.status === 200) {
-        if (typeof toast !== 'undefined') {
-          toast.success("Product added to cart! 🛒");
-        } else {
-          alert("Product added to cart!");
-        }
+        toast.success("Product added to cart! 🛒");
         navigate("/user/cartpage");
       }
     } catch (err) {
       console.error("Add to cart error:", err.response || err);
+      toast.error("Something went wrong!");
     }
   };
 
-  // ✅ Beauty category + Active Filter logic
+  // ✅ Beauty Filter Logic
   const filteredProducts = products.filter((product) => {
     const isBeauty = product.categoryId?.name === "Beauty";
-    if (activeFilter === "All") return isBeauty;
-    // Name mathi category shoahse
-    return isBeauty && product.name.toLowerCase().includes(activeFilter.toLowerCase());
+    
+    const matchesCategory = activeFilter === "All" || 
+      product.name.toLowerCase().includes(activeFilter.toLowerCase());
+
+    return isBeauty && matchesCategory;
   });
 
   return (
     <div className="bg-[#FFF0F5] min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">Beauty Collection</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 border-l-4 border-[#ff3f6c] pl-3">
+        Beauty Collection
+      </h1>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* --- Sidebar Filter Start --- */}
-        <div className="w-full md:w-52 bg-white p-4 rounded-xl shadow-sm h-fit border border-pink-100">
-          <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase">Filters</h3>
-          <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+        {/* --- Sidebar Filter (Kids જેવી જ ડિઝાઇન) --- */}
+        <div className="w-full md:w-64 bg-white p-5 rounded-xl shadow-sm h-fit border border-pink-100 sticky top-5">
+          
+          <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Categories</h3>
+          <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
             {["All", "Lipstick", "Perfume", "Foundation", "Moisturizer", "Face Wash"].map((item) => (
               <button
                 key={item}
                 onClick={() => setActiveFilter(item)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap text-left ${
-                  activeFilter === item
-                    ? "bg-[#ff3f6c] text-white shadow-md"
-                    : "bg-white text-gray-600 hover:bg-pink-50 border border-gray-100"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all text-left whitespace-nowrap ${
+                  activeFilter === item 
+                    ? "bg-[#ff3f6c] text-white shadow-md" 
+                    : "bg-white text-gray-600 hover:bg-pink-50 border border-gray-50"
                 }`}
               >
                 {item}
               </button>
             ))}
           </div>
-        </div>
-        {/* --- Sidebar Filter End --- */}
 
-        {/* --- Products Grid Start --- */}
+          {activeFilter !== "All" && (
+            <button 
+              onClick={() => setActiveFilter("All")}
+              className="mt-2 w-full text-[11px] text-red-400 font-bold hover:underline uppercase tracking-tighter"
+            >
+              Clear Filter
+            </button>
+          )}
+        </div>
+
+        {/* --- Products Grid (Kids જેવી જ 5-column ગ્રીડ) --- */}
         <div className="flex-1">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col"
-              >
+              <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
                 <div 
                   className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
                   onClick={() => navigate(`/user/productdetail/${product._id}`)}
-                >         
-                 <img
-                    src={product.image?.[0] || "/placeholder.jpg"}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                >
+                  <img 
+                    src={product.image?.[0] || "/placeholder.jpg"} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
                 </div>
-
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-sm font-semibold text-gray-800 truncate">
-                    {product.name}
-                  </h2>
-                  <p className="text-[#ff3f6c] font-bold text-lg mt-1">
-                    ₹{product.price}
-                  </p>
+                  <h2 className="text-sm font-semibold text-gray-700 truncate">{product.name}</h2>
+                  <p className="text-[#ff3f6c] font-bold text-lg mt-1">₹{product.price}</p>
+                  
+                  {/* Space for consistency with other pages */}
+                  <div className="min-h-[1.25rem] mt-1 mb-3"></div>
 
                   <button
                     onClick={() => handleAddToCart(product._id)}
-                    className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2 rounded-lg font-medium hover:bg-pink-600 transition-colors"
+                    className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors"
                   >
                     Add to Cart
                   </button>
                 </div>
               </div>
             ))}
-            
+
             {filteredProducts.length === 0 && (
-              <div className="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-gray-300 text-gray-500">
-                Beauty section ma "{activeFilter}" category ma haji products nathi.
+              <div className="col-span-full text-center py-24 bg-white rounded-2xl border-2 border-dashed border-gray-100">
+                <p className="text-gray-400">નવા સ્ટોકમાં આ કેટેગરીની પ્રોડક્ટ્સ જલ્દી આવશે!</p>
+                <button onClick={() => setActiveFilter("All")} className="mt-3 text-[#ff3f6c] font-bold hover:underline">Show all products</button>
               </div>
             )}
           </div>
         </div>
-        {/* --- Products Grid End --- */}
       </div>
     </div>
   );
