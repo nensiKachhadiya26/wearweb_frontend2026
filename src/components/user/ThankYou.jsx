@@ -4,7 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const ThankYou = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const orderId = location.state?.orderId || "N/A";
+
+    // PaymentComponents માંથી મોકલેલો paymentId અહીં મેળવો
+    const referenceId = location.state?.paymentId || "N/A";
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 text-center">
@@ -12,12 +14,16 @@ const ThankYou = () => {
                 <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl font-bold">
                     ✓
                 </div>
+                
                 <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Thank You!</h1>
                 <p className="text-gray-600 mb-8">Your order has been placed successfully. We are preparing it for delivery!</p>
                 
                 <div className="bg-gray-50 rounded-2xl p-5 mb-8 text-left border border-gray-100">
                     <p className="text-gray-400 text-xs uppercase font-bold mb-1 tracking-widest">Order Reference</p>
-                    <p className="font-mono text-gray-800 font-bold text-lg">#{orderId.toString().slice(-8).toUpperCase()}</p>
+                    {/* અહીં referenceId નો ઉપયોગ કર્યો છે જેથી હવે 'orderId is not defined' એરર નહીં આવે */}
+                    <p className="font-mono text-gray-800 font-bold text-lg">
+                        #{referenceId !== "N/A" ? referenceId : "REFERENCE-NOT-FOUND"}
+                    </p>
                 </div>
 
                 <div className="space-y-4">

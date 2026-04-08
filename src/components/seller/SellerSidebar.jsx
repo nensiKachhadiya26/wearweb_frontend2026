@@ -1,7 +1,7 @@
 import React from "react";
-import { FaTachometerAlt, FaStore, FaShoppingCart, FaPlusSquare } from "react-icons/fa";
+import { FaTachometerAlt, FaStore, FaShoppingCart, FaPlusSquare,FaUserCircle } from "react-icons/fa";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut} from "react-icons/fi";
 import { handleLogout } from "../utils/LogOut";
 
 export const SellerSidebar = () => {
@@ -47,6 +47,12 @@ export const SellerSidebar = () => {
           <li className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition font-medium text-gray-700">
             <FaShoppingCart />
             Orders
+          </li>
+        </Link>
+          <Link to="/profile" className="block"> 
+          <li className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition font-medium text-gray-700">
+            <FaUserCircle />
+            Profile
           </li>
         </Link>
         </ul>

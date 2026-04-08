@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { FaTachometerAlt, FaUsers, FaStore, FaBoxOpen,FaRupeeSign,FaHistory,FaSignOutAlt } from "react-icons/fa";
+import { FaTachometerAlt, FaUsers, FaStore, FaBoxOpen,FaRupeeSign,FaHistory,FaSignOutAlt,FaUserCircle } from "react-icons/fa";
 import { handleLogout } from "../utils/LogOut";
 
 
@@ -35,6 +35,11 @@ export const AdminSidebar = () => {
             <FaHistory />
              Reviews
           </li>
+             <li onClick={() => navigate("/profile")} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition-all font-semibold text-gray-600">
+            <FaUserCircle />
+             Profile
+          </li>
+
         </ul>
         <button onClick={() => handleLogout(navigate)}
         className="flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold border-t mt-auto">
