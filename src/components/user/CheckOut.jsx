@@ -28,11 +28,11 @@ export const Checkout = () => {
         const nameRegex = /^[A-Za-z\s]+$/;
         const digitRegex = /^\d+$/;
 
-        if (!nameRegex.test(address.fullName)) return toast.error("Full Name: ફક્ત અક્ષરો જ લખો!");
-        if (address.phone.length !== 10 || !digitRegex.test(address.phone)) return toast.error("Phone: ૧૦ આંકડાનો નંબર લખો!");
-        if (address.address.trim().length < 10) return toast.error("Address: થોડું વધારે વિગતવાર એડ્રેસ લખો!");
-        if (!nameRegex.test(address.city)) return toast.error("City: શહેરનું નામ સાચું લખો!");
-        if (address.pincode.length !== 6 || !digitRegex.test(address.pincode)) return toast.error("Pincode: ૬ આંકડાનો પીનકોડ લખો!");
+        if (!nameRegex.test(address.fullName)) return toast.error("Full Name: Only Alfhabets!");
+        if (address.phone.length !== 10 || !digitRegex.test(address.phone)) return toast.error("Phone:Only 10 Digits!");
+        if (address.address.trim().length < 10) return toast.error("Address: In Detail!");
+        if (!nameRegex.test(address.city)) return toast.error("City: Correct Your City Name!");
+        if (address.pincode.length !== 6 || !digitRegex.test(address.pincode)) return toast.error("Pincode:Only 6 Digits!");
 
         const orderData = {
             totalAmount,
@@ -47,7 +47,7 @@ export const Checkout = () => {
         };
 
         if (paymentMethod === 'UPI') {
-            navigate("/booking", { state: orderData });
+            navigate("/user/payment", { state: orderData });
         } else {
             toast.success("Order Placed (COD) Successfully! 🎉");
         }

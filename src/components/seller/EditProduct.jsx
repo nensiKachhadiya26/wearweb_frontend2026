@@ -6,22 +6,37 @@ import { toast } from 'react-toastify';
 export const EditProduct = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    
+
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
-    const [selectedFile, setSelectedFile] = useState(null); 
-    const [loading, setLoading] = useState(false); // Loading state add kari che
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const [product, setProduct] = useState({
         name: '',
         price: '',
         description: '',
-        categoryId: '', 
+        categoryId: '',
         subCategoryId: '',
-        sizes: [] // Sizes array add karyu che
+        sizes: []
     });
 
-    const availableSizes = ["S", "M", "L", "XL", "XXL"];
+    // ✅ CreateProduct જેવું જ Size Data Structure
+    const sizeData = {
+        "Jeans ": ["28", "30", "32", "34", "36", "38"],
+        "Shirt": ["S", "M", "L", "XL", "XXL"],
+        "T Shirt": ["S", "M", "L", "XL", "XXL"],
+        "Hoodie": ["S", "M", "L", "XL", "XXL"],
+        "Jacket": ["S", "M", "L", "XL", "XXL"],
+        "Kurti": ["S", "M", "L", "XL", "XXL"],
+        "Tops": ["S", "M", "L", "XL"],
+        "Skirt": ["26", "28", "30", "32"],
+        "Chappal": ["3", "4", "5", "6", "7", "8"],
+        "Dungaree": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "Jeans": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "TShirt": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+        "Frock": ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,7 +68,13 @@ export const EditProduct = () => {
     }, [id]);
 
     const handleChange = (e) => {
-        setProduct({ ...product, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        // જો Category બદલાય તો SubCategory અને Sizes રીસેટ કરવા
+        if (name === "categoryId") {
+            setProduct({ ...product, categoryId: value, subCategoryId: '', sizes: [] });
+        } else {
+            setProduct({ ...product, [name]: value });
+        }
     };
 
     const handleSizeChange = (size) => {
@@ -67,6 +88,9 @@ export const EditProduct = () => {
         setSelectedFile(e.target.files[0]);
     };
 
+    // SubCategory Name શોધવા માટે (Size Data માંથી મેચ કરવા)
+    const selectedSubCategoryName = subCategories.find(sub => sub._id === product.subCategoryId)?.name;
+
     const handleUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -79,7 +103,6 @@ export const EditProduct = () => {
             formData.append("categoryId", product.categoryId);
             formData.append("subCategoryId", product.subCategoryId);
             
-            // Sizes array append
             product.sizes.forEach(size => formData.append("sizes", size));
             
             if (selectedFile) {
@@ -98,7 +121,6 @@ export const EditProduct = () => {
                 navigate('/seller/myproduct'); 
             }
         } catch (err) {
-            console.error("Update Error:", err);
             toast.error(err.response?.data?.message || "Update failed.");
         } finally {
             setLoading(false);
@@ -107,59 +129,31 @@ export const EditProduct = () => {
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white shadow-2xl rounded-2xl border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 border-b pb-3">Edit Product</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Edit Product</h2>
             
             <form onSubmit={handleUpdate} className="space-y-5">
-                
-                {/* Name */}
+                {/* Product Name */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
                     <input name="name" value={product.name} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" required />
                 </div>
 
-                {/* Sizes Selection */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Available Sizes</label>
-                    <div className="flex flex-wrap gap-3">
-                        {availableSizes.map((size) => (
-                            <label key={size} className="flex items-center space-x-2 cursor-pointer group">
-                                <input 
-                                    type="checkbox" 
-                                    checked={product.sizes.includes(size)}
-                                    onChange={() => handleSizeChange(size)}
-                                    className="w-4 h-4 accent-[#ff3f6c] rounded border-gray-300"
-                                />
-                                <span className="text-sm font-semibold text-gray-600 group-hover:text-[#ff3f6c] transition">
-                                    {size}
-                                </span>
-                            </label>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Price */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                    <input name="price" type="number" value={product.price} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" required />
-                </div>
-
+                {/* Category & Sub Category */}
                 <div className="grid grid-cols-2 gap-4">
-                    {/* Category */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                         <select name="categoryId" value={product.categoryId} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none cursor-pointer" required>
-                            <option value="">Select</option>
+                            <option value="">Select Category</option>
                             {categories.map(cat => (
                                 <option key={cat._id} value={cat._id}>{cat.name}</option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Subcategory */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
-                        <select name="subCategoryId" value={product.subCategoryId} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none cursor-pointer">
-                            <option value="">Select</option>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Sub Category</label>
+                        <select name="subCategoryId" value={product.subCategoryId} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none cursor-pointer" required>
+                            <option value="">Select Sub</option>
                             {subCategories
                                 .filter(sub => String(sub.categoryId?._id || sub.categoryId) === String(product.categoryId))
                                 .map(sub => (
@@ -170,10 +164,40 @@ export const EditProduct = () => {
                     </div>
                 </div>
 
-                {/* Image Upload */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Image (Optional)</label>
-                    <input type="file" onChange={handleFileChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 transition cursor-pointer" accept="image/*" />
+                {/* ✅ Dynamic Sizes - Sub Category મુજબ */}
+                {selectedSubCategoryName && sizeData[selectedSubCategoryName] && (
+                    <div className="p-4 bg-pink-50 rounded-xl border border-dashed border-pink-200 shadow-inner">
+                        <label className="block text-sm font-bold text-pink-700 mb-3 uppercase tracking-wide">
+                             Sizes for {selectedSubCategoryName}
+                        </label>
+                        <div className="flex flex-wrap gap-3">
+                            {sizeData[selectedSubCategoryName].map((size) => (
+                                <label key={size} className="flex items-center space-x-2 cursor-pointer group bg-white px-3 py-1.5 rounded-lg border border-gray-200 hover:border-pink-400 transition shadow-sm active:scale-95">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={product.sizes.includes(size)}
+                                        onChange={() => handleSizeChange(size)}
+                                        className="w-4 h-4 accent-[#ff3f6c] cursor-pointer"
+                                    />
+                                    <span className="text-sm font-semibold text-gray-600 group-hover:text-[#ff3f6c]">
+                                        {size}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Price & Image */}
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                        <input name="price" type="number" value={product.price} onChange={handleChange} className="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-pink-400 outline-none transition" required />
+                    </div>
+                    <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                         <input type="file" onChange={handleFileChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 transition cursor-pointer" accept="image/*" />
+                    </div>
                 </div>
 
                 {/* Description */}

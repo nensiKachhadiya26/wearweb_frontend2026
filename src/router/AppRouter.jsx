@@ -38,7 +38,7 @@ import { ResetPassword } from "../components/ResetPassword";
 import ProductDetail from "../components/user/ProductDetail";
 import Review from "../components/admin/Review";
 import Profile from "../components/user/Profile";
-import PaymentComponents from "../components/PaymentComponents"
+import PaymentComponents from "../components/user/PaymentComponents"
 
 const router = createBrowserRouter([
     {path:'/login' , element:<LoginPage/>},
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
     {path:'/forgotpassword',element:<ForgotPassword/>},
     {path:'/ResetPassword/:token',element:<ResetPassword/>},
     {path:'/profile',element:<Profile/>},
-      {path:"/booking",element:<PaymentComponents/>},
+      
    
     {
         path:'/admin', element:
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
            { path: 'order-detail/:id', element: <OrderDetail /> },
            {path:'search',element:<SearchPage/>},
            {path:'productdetail/:id',element:<ProductDetail/>},
-           
+           {path:"payment",element:<PaymentComponents/>},
            
           
         ]        

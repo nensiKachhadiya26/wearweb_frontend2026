@@ -57,7 +57,7 @@ export const ManageSeller = () => {
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="p-5 text-sm font-bold text-gray-600 uppercase tracking-wider">Seller Name</th>
-              <th className="p-5 text-sm font-bold text-gray-600 uppercase tracking-wider">Contact Info</th>
+              <th className="p-5 text-sm font-bold text-gray-600 uppercase tracking-wider">Email Info</th>
               <th className="p-5 text-sm font-bold text-gray-600 uppercase tracking-wider text-center">Status</th>
               <th className="p-5 text-sm font-bold text-gray-600 uppercase tracking-wider text-right">Actions</th>
             </tr>

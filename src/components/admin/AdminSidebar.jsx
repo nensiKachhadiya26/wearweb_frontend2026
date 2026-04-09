@@ -35,16 +35,17 @@ export const AdminSidebar = () => {
             <FaHistory />
              Reviews
           </li>
-             <li onClick={() => navigate("/profile")} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#FFE6EC] hover:text-[#FF3F6C] cursor-pointer transition-all font-semibold text-gray-600">
-            <FaUserCircle />
-             Profile
-          </li>
-
         </ul>
-        <button onClick={() => handleLogout(navigate)}
+         <div className="mt-auto border-t pt-2">
+        {/* <button onClick={() => handleLogout(navigate)}
         className="flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold border-t mt-auto">
           <FaSignOutAlt /> Logout
-        </button>
+        </button> */}
+        <li onClick={() => navigate("/profile")} className="flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold list-none cursor-pointer">
+            <FaUserCircle />
+             Profile
+        </li>
+        </div>
       </div>
 
       {/* 2. Main Content Area (Dynamic) */}

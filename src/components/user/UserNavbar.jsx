@@ -78,11 +78,11 @@ export const UserNavbar = () => {
         />
 
         {/* Logout Icon */}
-        <FiLogOut
+        {/* <FiLogOut
           className="text-2xl cursor-pointer text-gray-600 hover:text-red-500 transition-colors"
           title="Logout"
           onClick={() => handleLogout(navigate)} 
-        />
+        /> */}
 
       </div>
     </div>
