@@ -110,6 +110,7 @@ const Profile = () => {
 
                 {/* Details Grid */}
                 <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Email Card */}
                     <div className="flex items-center space-x-4 p-4 rounded-xl bg-pink-50/50 border border-pink-100">
                         <div className="bg-pink-100 p-3 rounded-lg text-pink-600"><Mail size={22}/></div>
                         <div>
@@ -118,6 +119,7 @@ const Profile = () => {
                         </div>
                     </div>
 
+                    {/* Status Card */}
                     <div className="flex items-center space-x-4 p-4 rounded-xl bg-pink-50/50 border border-pink-100">
                         <div className="bg-pink-100 p-3 rounded-lg text-pink-600"><ShieldCheck size={22}/></div>
                         <div>
@@ -126,23 +128,26 @@ const Profile = () => {
                         </div>
                     </div>
 
+                    {/* Joined Card */}
                     <div className="flex items-center space-x-4 p-4 rounded-xl bg-pink-50/50 border border-pink-100">
                         <div className="bg-pink-100 p-3 rounded-lg text-pink-600"><Calendar size={22}/></div>
                         <div>
                             <p className="text-xs text-gray-500 uppercase font-bold">Joined</p>
-                            <p className="text-gray-700 font-medium">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "New Member"}</p>
+                            <p className="text-gray-700 font-medium">
+                                {user.created_at ? new Date(user.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : "New Member"}
+                            </p>
                         </div>
                     </div>
 
+                    {/* Sign Out Card */}
                     <div onClick={handleLogout} className="flex items-center space-x-4 p-4 rounded-xl bg-red-50 border border-red-100 hover:bg-red-100 transition cursor-pointer">
                         <div className="bg-red-200 p-3 rounded-lg text-red-600"><LogOut size={22}/></div>
                         <div>
-                            <p className="text-red-600 font-bold">Sign Out</p>
+                            <p className="text-red-600 font-bold uppercase">Sign Out</p>
                             <p className="text-xs text-gray-400 font-medium">Logout from session</p>
                         </div>
                     </div>
                 </div>
-
                 {/* Navigation Buttons */}
                 <div className="border-t border-gray-100 p-6 bg-gray-50 flex flex-wrap justify-center gap-4">
                     {user.role === 'admin' && (

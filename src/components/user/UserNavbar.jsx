@@ -71,11 +71,13 @@ export const UserNavbar = () => {
         </div>
 
         {/* Profile Icon */}
+        <div className="flex flex-col items-center group cursor-pointer" onClick={() => navigate("/profile")}>
         <FaUserCircle
-          className="text-2xl cursor-pointer text-gray-700 hover:text-pink-500 transition-colors"
+          className="text-2xl text-gray-700 group-hover:text-pink-500 transition-colors"
           title="Profile"
-          onClick={() => navigate("/profile")} // અહીં પ્રોફાઇલ પેજનું પાથ ચેક કરી લેવો
         />
+        <span className="text-[10px] font-bold text-gray-500 group-hover:text-pink-500 uppercase">Profile</span>
+      </div>
 
         {/* Logout Icon */}
         {/* <FiLogOut

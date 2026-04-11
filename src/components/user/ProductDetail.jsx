@@ -11,7 +11,7 @@ const ProductDetail = () => {
     const [product, setProduct] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
 
     const loadData = async () => {
@@ -119,7 +119,7 @@ const ProductDetail = () => {
                             <div className="flex gap-1 mt-1">
                                 {[1, 2, 3, 4, 5].map((s) => (
                                     <button key={s} type="button" onClick={() => setRating(s)}>
-                                        <FaStar size={18} className={s <= rating ? "text-yellow-400" : "text-gray-200"} />
+                                      <FaStar size={18} className={`${s <= rating ? "text-blue-400" : "text-gray-200"} cursor-pointer`} /> 
                                     </button>
                                 ))}
                             </div>
@@ -147,10 +147,10 @@ const ProductDetail = () => {
                                     <div className="flex items-center gap-2">
                                         <FaUserCircle size={24} className="text-pink-200" />
                                         <span className="font-bold text-xs text-gray-700">
-                                            {r.userId?.firstName || "Customer"}
+                                         {r.userId?.firstName ? `${r.userId.firstName} ${r.userId.lastName}` : "Customer"}
                                         </span>
                                     </div>
-                                    <div className="flex text-yellow-400 gap-0.5">
+                                    <div className="flex text-blue-400 gap-0.5">
                                         {[...Array(5)].map((_, idx) => (
                                             <FaStar key={idx} size={10} className={idx < r.rating ? "fill-current" : "text-gray-100"} />
                                         ))}

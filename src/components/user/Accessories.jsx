@@ -100,7 +100,7 @@ const Accessories = () => {
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
-              <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
+              <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col ">
                 <div 
                   className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
                   onClick={() => navigate(`/user/productdetail/${product._id}`)}
@@ -118,12 +118,12 @@ const Accessories = () => {
                   {/* Space maintaining div for consistency */}
                   <div className="min-h-[1.25rem] mt-1 mb-3"></div>
 
-                  {/* <button
+                  <button
                     onClick={() => handleAddToCart(product._id)}
                     className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors"
                   >
                     Add to Cart
-                  </button> */}
+                  </button>
                 </div>
               </div>
             ))}

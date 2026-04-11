@@ -73,6 +73,7 @@ const OrderDetail = () => {
                                     <p className="text-sm text-gray-500">Qty: {item.quantity} × ₹{item.product_id?.price || item.price}</p>
                                 </div>
                                 <p className="font-bold text-gray-700">₹{item.quantity * (item.product_id?.price || item.price)}</p>
+                                
                             </div>
                         ))
                     ) : (

@@ -53,11 +53,11 @@ export const CreateProduct = () => {
             formData.append("categoryId", data.categoryId)
             formData.append("subCategoryId", data.subCategoryId)
             
-            if (data.sizes) {
-                data.sizes.forEach(size => {
-                    formData.append("sizes", size)
-                })
-            }
+            if (data.sizes && data.sizes.length > 0) {
+            data.sizes.forEach(size => {
+                formData.append("sizes", size) // આ બરાબર છે
+            })
+        }
 
             if (data.image[0]) {
                 formData.append("image", data.image[0])
@@ -76,6 +76,7 @@ export const CreateProduct = () => {
                 reset()
             }
         } catch (err) {
+            console.error("Frontend Error:", err.response?.data);
             toast.error(err.response?.data?.message || "Something went wrong!")
         } finally {
             setLoading(false)
