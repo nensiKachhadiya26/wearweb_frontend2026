@@ -118,12 +118,12 @@ const Accessories = () => {
                   {/* Space maintaining div for consistency */}
                   <div className="min-h-[1.25rem] mt-1 mb-3"></div>
 
-                  <button
+                  {/* <button
                     onClick={() => handleAddToCart(product._id)}
                     className="mt-auto w-full bg-[#ff3f6c] cursor-pointer text-white py-2.5 rounded-lg text-sm font-bold hover:bg-[#e6335f] transition-colors"
                   >
                     Add to Cart
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}

@@ -13,8 +13,16 @@ export const ForgotPassword = () => {
       const res = await axios.post("/userApi/forgotpassword", data); 
       
       if (res.status === 200) {
-        toast.success("Reset link sent to your email!");
-        navigate("/login");
+        // Updated message to tell the user to check their mail
+        toast.info("📩 Please check your email inbox for the reset link!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        
+        // Optional: wait a few seconds before navigating so they can read the toast
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (err) {
       console.error(err);

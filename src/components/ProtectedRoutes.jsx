@@ -9,7 +9,7 @@ const ProtectedRoutes = ({children,userRoles})=>{
 
     useEffect(()=>{
         settoken(localStorage.getItem("token"))
-        setroles(localStorage.getItem("role"))
+        setroles(localStorage.getItem("role","seller"))
         setloading(false)
     },[])
     if(loading){
