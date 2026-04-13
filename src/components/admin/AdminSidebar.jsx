@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaStore, FaBoxOpen,FaRupeeSign,FaHistory,FaSignOutAlt,FaUserCircle } from "react-icons/fa";
 import { handleLogout } from "../utils/LogOut";
+import DashboardFooter from "../DashboardFooter";
 
 
 export const AdminSidebar = () => {
@@ -52,7 +53,9 @@ export const AdminSidebar = () => {
       {/* ml-64 etle mukyu che jethi content sidebar ni BAJU ma rahe, niche nahi */}
       <div className="flex-1 ml-64 min-h-screen">
         <Outlet /> 
+        
       </div>
+    
     </div>
   );
 };

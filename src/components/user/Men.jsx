@@ -79,7 +79,8 @@ const Men = () => {
 
       <div className="flex flex-col md:flex-row gap-6">
         
-        {/* --- Sidebar Filter --- */}
+     
+     
         <div className="w-full md:w-64 bg-white p-5 rounded-xl shadow-sm h-fit border border-pink-100 sticky top-5">
           <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Sub Categories</h3>
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
@@ -123,13 +124,15 @@ const Men = () => {
           )}
         </div>
 
-        {/* --- Products Grid --- */}
+       
+       
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
               <div key={product._id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group flex flex-col">
                 
-                {/* 1. IMAGE - CLICKABLE */}
+              
+              
                 <div 
                   className="aspect-[3/4] w-full overflow-hidden bg-gray-50 cursor-pointer"
                   onClick={() => navigate(`/user/productdetail/${product._id}`)}

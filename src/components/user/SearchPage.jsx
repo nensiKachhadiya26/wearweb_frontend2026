@@ -5,21 +5,25 @@ import axios from "axios";
 const SearchPage = () => {
   const [products, setProducts] = useState([]);
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get("q"); // URL માંથી સર્ચ મેળવો
+  const query = new URLSearchParams(location.search).get("q"); 
+  
 
  useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const token = localStorage.getItem("token"); // ટોકન મેળવો
+      const token = localStorage.getItem("token"); 
+      
       const res = await axios.get("/productApi/products", {
         headers: {
-          Authorization: `Bearer ${token}` // હેડરમાં ટોકન પાસ કરો
+          Authorization: `Bearer ${token}` 
+          
         }
       });
       setProducts(res.data.data);
     } catch (err) {
       console.error("Search fetch error:", err);
-      // જો ટોકન એક્સપાયર થઈ ગયું હોય તો લોગિન પર મોકલી શકાય
+      
+      
     }
   };
 
@@ -48,7 +52,7 @@ const SearchPage = () => {
       </div>
 
       {filteredProducts.length === 0 && (
-        <div className="text-center py-20 text-gray-400">કંઈ મળ્યું નથી, કંઈક બીજું સર્ચ કરો!</div>
+        <div className="text-center py-20 text-gray-400">No Found Anything Try Again Search!</div>
       )}
     </div>
   );

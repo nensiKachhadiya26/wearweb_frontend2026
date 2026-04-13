@@ -9,6 +9,8 @@ import {
   FaUserCircle 
 } from "react-icons/fa";
 import { handleLogout } from "../utils/LogOut";
+import DashboardFooter from "../DashboardFooter";
+
 
 export const SellerSidebar = () => {
   const navigate = useNavigate();
@@ -68,11 +70,13 @@ export const SellerSidebar = () => {
       </div>
 
       {/* 2. Main Content Area (Dynamic) */}
-      <div className="flex-1 ml-64 min-h-screen">
-        <div className="p-8">
+          <div className="flex-1 ml-64 min-h-screen flex flex-col justify-between">
+          <div className="p-8">
            <Outlet /> 
         </div>
+       <DashboardFooter role="seller" />
       </div>
+       
     </div>
   );
 };

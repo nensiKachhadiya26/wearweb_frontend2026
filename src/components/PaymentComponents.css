@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at top right, #1e293b, #0f172a);
+  /* ડાર્કને બદલે પિંક ગ્રેડિયન્ટ */
+  background: radial-gradient(circle at top right, #fff5f7, #fff0f5);
   font-family: 'Inter', sans-serif;
   padding: 20px;
 }
@@ -11,13 +12,15 @@
 .booking-card {
   width: 100%;
   max-width: 500px;
-  background: rgba(255, 255, 255, 0.05);
+  /* કાચ જેવી અસર પણ પિંક શેડ સાથે */
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.2); /* Pink border */
   border-radius: 24px;
   padding: 40px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  color: #f8fafc;
+  /* હળવો પિંક શેડો */
+  box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.15);
+  color: #1f2937;
   animation: fadeIn 0.8s ease-out;
 }
 
@@ -34,18 +37,21 @@
 .booking-header h1 {
   font-size: 32px;
   font-weight: 800;
-  background: linear-gradient(to right, #60a5fa, #a855f7);
-  /* -webkit-background-clip: text; */
+  /* પિંક ગ્રેડિયન્ટ ટેક્સ્ટ */
+  background: linear-gradient(to right, #ec4899, #d946ef);
+  -webkit-background-clip: text; /* આને અન-કોમેન્ટ કર્યું */
   -webkit-text-fill-color: transparent;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
 .booking-details {
-  background: rgba(255, 255, 255, 0.03);
+  /* હળવો બેકગ્રાઉન્ડ */
+  background: rgba(236, 72, 153, 0.05);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 32px;
+  border: 1px dashed rgba(236, 72, 153, 0.2);
 }
 
 .detail-row {
@@ -57,22 +63,23 @@
 .detail-row:last-child {
   margin-bottom: 0;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(236, 72, 153, 0.1);
 }
 
 .label {
-  color: #94a3b8;
+  color: #9d174d; /* Darker Pink */
   font-size: 14px;
 }
 
 .value {
   font-weight: 600;
-  color: #f1f5f9;
+  color: #1f2937;
 }
 
 .total-value {
   font-size: 20px;
-  color: #60a5fa;
+  font-weight: 800;
+  color: #db2777; /* Highlighted Pink */
 }
 
 .pay-button {
@@ -80,18 +87,19 @@
   padding: 16px;
   border-radius: 14px;
   border: none;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  /* પિંક થીમ ગ્રેડિયન્ટ બટન */
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
   color: white;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.3);
 }
 
 .pay-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 20px 25px -5px rgba(236, 72, 153, 0.4);
   filter: brightness(1.1);
 }
 
@@ -105,6 +113,6 @@
   justify-content: center;
   gap: 8px;
   margin-top: 24px;
-  color: #64748b;
+  color: #94a3b8;
   font-size: 12px;
 }

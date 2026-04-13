@@ -15,7 +15,8 @@ const PaymentComponents = () => {
 
         setLoading(true);
         try {
-            // ૧. Razorpay ઓર્ડર ક્રિએટ કરવા માટે બેકએન્ડને રિક્વેસ્ટ
+            
+            
             const { data: { order } } = await axios.post("/paymentApi/create-order", {
                 amount: totalAmount
             });
@@ -35,7 +36,8 @@ const PaymentComponents = () => {
                     try {
                         const token = localStorage.getItem("token");
 
-                        // ૨. Crypto વેરીફિકેશન અને પેમેન્ટ સેવ કરવા માટે બેકએન્ડ કોલ
+                        
+                        
                         const verifyData = {
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
@@ -45,10 +47,12 @@ const PaymentComponents = () => {
 
                         const verifyRes = await axios.post("/paymentApi/verify-payment", verifyData);
 
-                        // જો બેકએન્ડમાં crypto વેરીફિકેશન સક્સેસ થાય
+                       
+                        
                         if (verifyRes.data.success) {
                             
-                            // ૩. હવે ઓર્ડર ટેબલમાં ડેટા સેવ કરો
+                            
+                            
                             const orderData = {
                                 paymentId: response.razorpay_payment_id,
                                 orderId: order.id,
@@ -73,13 +77,15 @@ const PaymentComponents = () => {
                             });
 
                             if (orderRes.status === 201 || orderRes.status === 200) {
-                                // ૪. કાર્ટ ક્લિયર કરો
+                                
+                                
                                 await axios.delete("/cartApi/clear", {
                                     headers: { Authorization: `Bearer ${token}` }
                                 });
                                 localStorage.removeItem('cartItems');
 
-                                // ૫. Thank You પેજ પર મોકલો
+                               
+                                
                                 navigate("/user/thankyou", { state: { paymentId: response.razorpay_payment_id } });
                             }
                         }
@@ -88,10 +94,11 @@ const PaymentComponents = () => {
                         alert("Payment successful, but verification failed.");
                     }
                 },
-                theme: { color: "#3b82f6" }
+                theme: { color: "#ea5090" }
             };
 
-            // Razorpay વિન્ડો ઓપન કરવાની લાઇન
+           
+            
             const rzp = new window.Razorpay(options);
             rzp.open();
 
@@ -103,32 +110,58 @@ const PaymentComponents = () => {
         }
     };
 
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
-            <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
-                <h2 className="text-2xl font-black text-center mb-8 text-blue-500 uppercase tracking-widest">
-                    Wear Web Checkout
-                </h2>
-                <div className="space-y-6 mb-8">
-                    <div className="flex justify-between border-b border-slate-700 pb-2">
-                        <span className="text-slate-400">Customer</span>
-                        <span className="font-bold">{fullName || 'Guest'}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-slate-700 pb-2">
-                        <span className="text-slate-400">Total Amount</span>
-                        <span className="font-bold text-blue-400 text-xl">₹ {totalAmount}</span>
-                    </div>
+  return (
+  
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF0F5] text-gray-800 p-4">
+        
+      
+        <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-pink-100">
+            
+          
+            <h2 className="text-2xl font-black text-center mb-8 text-pink-600 uppercase tracking-widest">
+                Wear Web Checkout
+            </h2>
+
+            <div className="space-y-6 mb-8">
+              
+                <div className="flex justify-between border-b border-pink-50 forced-colors:border-pink-100 pb-2">
+                    <span className="text-gray-600">Customer</span>
+                    <span className="font-bold text-gray-800">{fullName || 'Guest'}</span>
                 </div>
-                <button 
-                    onClick={handlePayNow} 
-                    disabled={loading} 
-                    className="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-blue-500/20"
-                >
-                    {loading ? "Processing..." : `PAY NOW ₹${totalAmount}`}
-                </button>
+                
+                <div className="flex justify-between border-b border-pink-50 pb-2">
+                    <span className="text-gray-600">Total Amount</span>
+                    <span className="font-bold text-pink-500 text-xl">₹ {totalAmount}</span>
+                </div>
+                <div className="flex justify-between border-b border-pink-50 pb-2">
+                <span className="text-gray-600">Phone</span>
+                <span className="font-bold text-gray-800">{phone}</span>
+                 </div>
+
+            <div className="flex flex-col border-b border-pink-50 pb-2">
+                <span className="text-gray-600 text-sm">Shipping Address</span>
+                <span className="font-semibold text-gray-700 text-sm">
+                    {address}, {city} - {pincode}
+                </span>
             </div>
+            </div>
+
+          
+            <button 
+                onClick={handlePayNow} 
+                disabled={loading} 
+                className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-pink-200"
+            >
+                {loading ? "Processing..." : `PAY NOW ₹${totalAmount}`}
+            </button>
+
+          
+            <p className="text-center text-[10px] text-gray-400 mt-4 uppercase tracking-tighter">
+                🔒 Secure SSL Encrypted Payment
+            </p>
         </div>
-    );
+    </div>
+);
 };
 
 export default PaymentComponents;

@@ -6,10 +6,10 @@ import { toast } from "react-toastify";
 const Kids = () => {
   const [products, setProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [selectedSizes, setSelectedSizes] = useState([]); // ✅ સાઇઝ ફિલ્ટર સ્ટેટ
+  const [selectedSizes, setSelectedSizes] = useState([]); 
+  
   const navigate = useNavigate();
 
-  // ✅ કિડ્સ સાઇઝ લિસ્ટ
   const kidsSizes = ["1-2Y","2-3Y", "3-4Y", "4-5Y","5-6Y", "6-7Y"];
 
   useEffect(() => {
@@ -63,15 +63,14 @@ const Kids = () => {
     }
   };
 
-  // ✅ Kids Filter Logic
   const filteredProducts = products.filter((product) => {
     const isKids = product.categoryId?.name === "Kids";
     
-    // કેટેગરી ફિલ્ટર
     const matchesCategory = activeFilter === "All" || 
       product.name.toLowerCase().includes(activeFilter.toLowerCase());
 
-    // સાઇઝ ફિલ્ટર (જો રમકડાં હોય તો સાઇઝ ચેક નહીં કરે)
+   
+      
     const isToy = product.name.toLowerCase().includes("toy");
     const matchesSize = selectedSizes.length === 0 || isToy || 
       product.sizes?.some(size => selectedSizes.includes(size));
@@ -84,12 +83,13 @@ const Kids = () => {
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Kids Collection</h1>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* --- Sidebar Filter --- */}
+        
+        
         <div className="w-full md:w-64 bg-white p-5 rounded-xl shadow-sm h-fit border border-pink-100 sticky top-5">
           
           <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Categories</h3>
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
-            {["All", "Dungaree", "Jeans", "TShirt", "Frock", "Toys"].map((item) => (
+            {["All", "Dungaree", "Jeans", "T Shirt", "Frock", "Toys"].map((item) => (
               <button
                 key={item}
                 onClick={() => setActiveFilter(item)}
@@ -102,7 +102,8 @@ const Kids = () => {
             ))}
           </div>
 
-          {/* ✅ Size Filter (Toys સિવાય બધે દેખાશે) */}
+        
+        
           {activeFilter !== "Toys" && (
             <>
               <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Filter By Age</h3>
@@ -134,7 +135,8 @@ const Kids = () => {
           )}
         </div>
 
-        {/* --- Products Grid --- */}
+      
+      
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (

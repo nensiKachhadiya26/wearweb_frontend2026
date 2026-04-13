@@ -95,12 +95,11 @@ export const Home = () => {
         {/* --- TRENDING PRODUCTS SECTION --- */}
         <h2 className="text-2xl font-bold mt-16 mb-6">Trending Products</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {productData.map((product) => (
+           {productData.map((product) => (
             <div 
               key={product.id} 
-              onClick={() => navigate(`/user/productdetail/${product.id}`)}
-              className="bg-white rounded-2xl shadow-sm p-4 cursor-pointer hover:shadow-pink-200 hover:shadow-lg transition-all border border-pink-100"
-            >
+              // onClick={() => navigate(`/user/productdetail/${product.id}`)}
+              className="bg-white rounded-2xl shadow-sm p-4  hover:shadow-pink-200 hover:shadow-lg transition-all border border-pink-100"> 
               <img 
                 src={product.image} 
                 alt={product.name} 
@@ -109,13 +108,13 @@ export const Home = () => {
               <div className="mt-4">
                 <p className="text-gray-500 text-sm uppercase">Fashion</p>
                 <p className="font-bold text-lg text-gray-800">{product.name}</p>
-                <p className="text-pink-500 font-bold mt-1">₹{product.price}</p>
+                {/* <p className="text-pink-500 font-bold mt-1">₹{product.price}</p> */}
               </div>
             </div>
-          ))}
+       ))} 
         </div>
 
       </div>
-    </div>
+     </div>
   );
 };

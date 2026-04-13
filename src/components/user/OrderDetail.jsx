@@ -26,7 +26,7 @@ const OrderDetail = () => {
         fetchOrderDetails();
     }, [id]);
 
-    // પ્રિન્ટ કરવા માટેનું ફંક્શન
+    
     const handlePrint = () => {
         window.print();
     };
@@ -43,7 +43,7 @@ const OrderDetail = () => {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-10 border border-gray-100 print:shadow-none print:my-0 print:border-none">
             
-            {/* Header with Print Button */}
+         
             <div className="flex justify-between items-center border-b pb-4 mb-6">
                 <h2 className="text-2xl font-bold text-pink-600">Order Details</h2>
                 <button 
@@ -55,7 +55,7 @@ const OrderDetail = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* ડાબી બાજુ: પ્રોડક્ટ લિસ્ટ */}
+               
                 <div>
                     <h3 className="font-bold text-lg mb-4 text-gray-700">Items Ordered</h3>
                     
@@ -86,7 +86,7 @@ const OrderDetail = () => {
                     </div>
                 </div>
 
-                {/* જમણી બાજુ: એડ્રેસ અને સ્ટેટસ */}
+             
                 <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200 shadow-inner">
                     <div className="mb-6">
                         <h3 className="font-bold text-gray-700 mb-3 border-b pb-1">Shipping Address</h3>
@@ -116,7 +116,7 @@ const OrderDetail = () => {
                 </div>
             </div>
 
-            {/* Print Only Footer (બિલના નીચેના ભાગમાં દેખાશે) */}
+       
             <div className="hidden print:block mt-10 text-center border-t pt-4 text-gray-400 text-xs">
                 Thank you for shopping with WearWeb! This is a computer-generated invoice.
             </div>

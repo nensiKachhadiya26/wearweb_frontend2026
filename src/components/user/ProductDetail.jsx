@@ -79,7 +79,7 @@ const ProductDetail = () => {
             {/* --- Product Main Section --- */}
             <div className="flex flex-col md:flex-row gap-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 
-                {/* Image: md:w-1/3 (નાનો ભાગ) */}
+               
                 <div className="w-full md:w-1/3 flex items-center justify-center bg-gray-50 rounded-xl p-4">
                     <img 
                         src={imageUrl} 
@@ -88,7 +88,7 @@ const ProductDetail = () => {
                     />
                 </div>
 
-                {/* Details: md:w-2/3 (મોટો ભાગ) */}
+             
                 <div className="w-full md:w-2/3 flex flex-col justify-center space-y-4">
                     <h1 className="text-2xl font-bold text-gray-800 tracking-tight">{product.productName}</h1>
                     <div className="text-2xl font-black text-[#ff3f6c]">₹{product.price}</div>
@@ -98,7 +98,7 @@ const ProductDetail = () => {
                     
                     <button 
                         onClick={() => handleAddToCart(product._id)}
-                        className="w-full md:w-48 bg-[#ff3f6c] hover:bg-[#e0375f] text-white py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-md"
+                        className="w-full md:w-48 bg-[#ff3f6c] hover:bg-[#e0375f] text-white py-2.5 rounded-lg  cursor-pointer font-bold flex items-center justify-center gap-2 transition-all shadow-md"
                     >
                         <FaShoppingCart size={16} /> Add to Cart
                     </button>

@@ -40,6 +40,8 @@ import Review from "../components/admin/Review";
 import Profile from "../components/user/Profile";
 import PaymentComponents from "../components/user/PaymentComponents"
 
+
+
 const router = createBrowserRouter([
     {path:'/login' , element:<LoginPage/>},
     {path:'/signup',element:<SignUp/>},
@@ -101,6 +103,8 @@ const router = createBrowserRouter([
              {path:'orderdetail/:id',element:<SellerOrderDetails/>}
         ]
     },
+
+   
 ])
 
 

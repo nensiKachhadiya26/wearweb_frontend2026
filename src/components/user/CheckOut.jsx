@@ -24,7 +24,7 @@ export const Checkout = () => {
     const handleConfirmOrder = (e) => {
         e.preventDefault();
 
-        // Strict Validations
+        
         const nameRegex = /^[A-Za-z\s]+$/;
         const digitRegex = /^\d+$/;
 
@@ -59,7 +59,7 @@ export const Checkout = () => {
             
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                {/* --- LEFT SIDE: SHIPPING FORM --- */}
+                
                 <div className="lg:col-span-2">
                     <div className="bg-white p-8 rounded-3xl shadow-xl shadow-pink-100/50 border border-pink-100">
                         <h2 className="text-2xl font-black mb-8 text-pink-700 flex items-center gap-3 uppercase tracking-tight">
@@ -157,7 +157,6 @@ export const Checkout = () => {
                     </div>
                 </div>
 
-                {/* --- RIGHT SIDE: ORDER SUMMARY --- */}
                 <div className="lg:col-span-1">
                     <div className="bg-white p-6 rounded-3xl shadow-xl shadow-pink-100/50 border border-pink-50 sticky top-10">
                         <h3 className="text-xl font-black mb-6 text-pink-700 border-b border-pink-50 pb-4">Bag Summary</h3>

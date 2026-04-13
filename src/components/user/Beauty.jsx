@@ -51,7 +51,6 @@ const Beauty = () => {
     }
   };
 
-  // ✅ Beauty Filter Logic
   const filteredProducts = products.filter((product) => {
     const isBeauty = product.categoryId?.name === "Beauty";
     
@@ -73,7 +72,7 @@ const Beauty = () => {
           
           <h3 className="font-bold mb-4 text-gray-700 border-b pb-2 text-sm uppercase tracking-wider">Categories</h3>
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible mb-6">
-            {["All", "Lipstick", "Perfume", "Foundation", "Moisturizer", "Face Wash"].map((item) => (
+            {["All", "Sun Screen", "Perfume", "Foundation", "Moisturizer", "Face Wash"].map((item) => (
               <button
                 key={item}
                 onClick={() => setActiveFilter(item)}
@@ -98,7 +97,7 @@ const Beauty = () => {
           )}
         </div>
 
-        {/* --- Products Grid (Kids જેવી જ 5-column ગ્રીડ) --- */}
+        
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
             {filteredProducts.map((product) => (
@@ -132,7 +131,7 @@ const Beauty = () => {
 
             {filteredProducts.length === 0 && (
               <div className="col-span-full text-center py-24 bg-white rounded-2xl border-2 border-dashed border-gray-100">
-                <p className="text-gray-400">નવા સ્ટોકમાં આ કેટેગરીની પ્રોડક્ટ્સ જલ્દી આવશે!</p>
+                <p className="text-gray-400">Oops! No products found with these filters.</p>
                 <button onClick={() => setActiveFilter("All")} className="mt-3 text-[#ff3f6c] font-bold hover:underline">Show all products</button>
               </div>
             )}

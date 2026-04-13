@@ -54,22 +54,26 @@ export const LoginPage = () => {
   }
 
   return (
-    // આખું પેજ સેન્ટર કરવા માટે
+    
+    
     <div className="min-h-screen flex items-center justify-center bg-[#FF3F6C]/10 p-4">
       
-      {/* મેઈન કન્ટેનર: ફ્લેક્સ રો (Flex Row) */}
+     
+     
       <div className="bg-white flex flex-col md:flex-row rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
         
-        {/* ડાબી બાજુ: ઈમેજ સેક્શન */}
+        
+        
         <div className="md:w-1/2 bg-white flex items-center justify-center p-6">
           <img 
-            src={image_login} // અહીં તમારી ઈમેજનો સાચો પાથ આપો
+            src={image_login} 
             alt="Login Illustration" 
             className="w-full h-auto object-contain"
           />
         </div>
 
-        {/* જમણી બાજુ: લોગિન ફોર્મ સેક્શન */}
+        
+        
         <div className="md:w-1/2 p-8 lg:p-12">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
             Login
