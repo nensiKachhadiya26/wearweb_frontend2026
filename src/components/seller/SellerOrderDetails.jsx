@@ -40,7 +40,7 @@ const SellerOrderDetails = () => {
             );
 
             if (res.data.success) {
-                // ૨. સ્ટેટ અપડેટ
+               
                 setOrderData(prev => ({
                     ...prev,
                     order: {
@@ -49,7 +49,6 @@ const SellerOrderDetails = () => {
                     }
                 }));
                 
-                // ૩. લોડિંગ ટોસ્ટને સક્સેસ મેસેજમાં ફેરવશે
                 toast.update(toastId, { 
                     render: `Order status changed to ${newStatus} successfully!`, 
                     type: "success", 
@@ -59,7 +58,7 @@ const SellerOrderDetails = () => {
             }
         } catch (err) {
             console.error("Status Update Error:", err);
-            // ૪. એરર આવે તો ટોસ્ટને એરર મેસેજમાં ફેરવશે
+        
             toast.update(toastId, { 
                 render: "Failed to update status. Please try again.", 
                 type: "error", 
@@ -81,7 +80,7 @@ const SellerOrderDetails = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">Order Management</h2>
                     
-                    {/* સ્ટેટસ અપડેટ ડ્રોપડાઉન */}
+                    
                     <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm border">
                         <span className="text-sm font-semibold text-gray-500">Change Status:</span>
                         <select 
