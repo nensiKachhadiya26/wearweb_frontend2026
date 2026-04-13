@@ -9,7 +9,7 @@ import {
   FaUserCircle 
 } from "react-icons/fa";
 import { handleLogout } from "../utils/LogOut";
-import DashboardFooter from "../DashboardFooter";
+
 
 
 export const SellerSidebar = () => {
@@ -74,7 +74,7 @@ export const SellerSidebar = () => {
           <div className="p-8">
            <Outlet /> 
         </div>
-       <DashboardFooter role="seller" />
+       
       </div>
        
     </div>

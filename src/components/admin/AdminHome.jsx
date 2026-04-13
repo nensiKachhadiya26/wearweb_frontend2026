@@ -10,7 +10,7 @@ export const AdminHome = () => {
     totalOrders: 0,
     totalRevenue: 0,
   });
-  const [recentOrders, setRecentOrders] = useState([]); // તાજેતરના ઓર્ડર માટે સ્ટેટ
+  const [recentOrders, setRecentOrders] = useState([]); 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,21 +20,17 @@ useEffect(() => {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
-      // 1. Stats Fetch (પહેલા જેવું જ)
       const statsRes = await axios.get("/userApi/admin/status", { headers });
       if (statsRes.data.success) {
         setStatus(statsRes.data.stats);
       }
 
-      // 2. Sales Fetch અને Pending ફિલ્ટર
       const salesRes = await axios.get("/userApi/view-sales", { headers });
       if (salesRes.data.success) {
-        // અહીં filter વાપરીને ફક્ત 'Pending' સ્ટેટસ વાળા ઓર્ડર જ લીધા છે
         const pendingOnly = salesRes.data.data.filter(
           (order) => order.status === "Pending"
         );
         
-        // છેલ્લા 5 પેન્ડિંગ ઓર્ડર બતાવવા માટે
         setRecentOrders(pendingOnly.slice(0, 5));
       }
     } catch (err) {

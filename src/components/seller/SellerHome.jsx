@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export const SellerHome = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [totalOrder, setTotalOrder] = useState(0);
-  const [revenue, setRevenue] = useState(0); // રેવન્યુ માટે નવું સ્ટેટ
+  const [revenue, setRevenue] = useState(0); 
   const [pendingOrders, setPendingOrders] = useState([]);
 
   useEffect(() => {
@@ -15,16 +15,13 @@ export const SellerHome = () => {
     const token = localStorage.getItem("token");
     const headers = { Authorization: `Bearer ${token}` };
 
-    // ૧. પ્રોડક્ટ્સ ફેચ કરો (આ લાઇન પહેલા રાખો)
     const prodRes = await axios.get("/productApi/my-products", { headers });
     if (prodRes.data && prodRes.data.data) {
       setTotalCount(prodRes.data.data.length);
     }
 
-    // ૨. ઓર્ડર્સ ફેચ કરો (અહીં ખાતરી કરો કે orderRes બરાબર લખ્યું છે)
     const orderRes = await axios.get("/orderApi/orders", { headers });
     
-    // ચેક કરો કે orderRes માં ડેટા છે કે નહીં
     if (orderRes.data && orderRes.data.data) {
       const orders = orderRes.data.data;
       setTotalOrder(orders.length);
@@ -35,13 +32,13 @@ export const SellerHome = () => {
       setRevenue(totalRev);
     }
   } catch (err) {
-    console.error("Fetch error:", err); // એરર જોવા માટે
+    console.error("Fetch error:", err); 
   }
 };
     const fetchPending = async () => {
         try {
             const token = localStorage.getItem("token");
-            const res = await axios.get("/orderApi/recent-order", { // તમારો નવો રૂટ
+            const res = await axios.get("/orderApi/recent-order", { 
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.data.success) {
@@ -62,7 +59,8 @@ export const SellerHome = () => {
         Seller Dashboard
       </h1>
 
-      {/* Stats Cards - ડિઝાઇન એ જ રહેશે */}
+    
+    
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border border-pink-50 flex flex-col items-center text-center">
           <div className="bg-pink-50 p-4 rounded-full mb-3">
