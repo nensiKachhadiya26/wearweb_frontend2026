@@ -27,9 +27,9 @@ const SellerOrderDetails = () => {
         fetchOrderDetails();
     }, [id]);
 
-    // ઓર્ડર સ્ટેટસ અપડેટ કરવા માટેનું ફંક્શન (Toast Improvements સાથે)
+   
     const handleStatusChange = async (newStatus) => {
-        // ૧. શરૂઆતમાં લોડિંગ મેસેજ બતાવશે
+       
         const toastId = toast.loading("Updating status...");
 
         try {
