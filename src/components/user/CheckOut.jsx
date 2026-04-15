@@ -183,7 +183,7 @@ export const Checkout = () => {
 
                         <div className="mt-8 pt-6 border-t border-pink-100 space-y-3">
                             <div className="flex justify-between text-gray-500 font-bold text-sm uppercase">
-                                <span>Bag Total</span>
+                                <span> Total</span>
                                 <span>₹{totalAmount}</span>
                             </div>
                             <div className="flex justify-between text-gray-500 font-bold text-sm uppercase">

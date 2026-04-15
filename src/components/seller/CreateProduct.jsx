@@ -128,7 +128,7 @@ export const CreateProduct = () => {
                     </div>
                 </div>
 
-                {/* ✅ Dynamic Sizes - Sub Category ના નામ મુજબ */}
+               
                 {selectedSubCategoryName && sizeData[selectedSubCategoryName] && (
                     <div className="p-4 bg-pink-50 rounded-xl border border-dashed border-pink-200 shadow-inner">
                         <label className="block text-sm font-bold text-pink-700 mb-3 uppercase tracking-wide">

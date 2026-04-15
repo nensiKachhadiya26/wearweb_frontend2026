@@ -29,13 +29,11 @@ const ViewSale = () => {
 
   const closePreview = () => setSelectedImage(null);
 
-  // ફિલ્ટર લોજિક: પ્રોડક્ટ નામ અથવા ઓર્ડર આઈડી થી સર્ચ કરવા
   const filteredSales = salesData.filter(sale => 
     sale.product_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     sale.order_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // સ્ટેટ્સ ગણતરી (ફિલ્ટર કરેલા ડેટા પરથી)
 const totalRevenue = filteredSales.reduce((acc, curr) => {
   return acc + (Number(curr.amount) || 0);
 }, 0);

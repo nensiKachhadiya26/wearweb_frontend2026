@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaStore, FaBoxOpen,FaRupeeSign,FaHistory,FaSignOutAlt,FaUserCircle } from "react-icons/fa";
 import { handleLogout } from "../utils/LogOut";
-import DashboardFooter from "../DashboardFooter";
+
 
 
 export const AdminSidebar = () => {
@@ -38,10 +38,7 @@ export const AdminSidebar = () => {
           </li>
         </ul>
          <div className="mt-auto border-t pt-2">
-        {/* <button onClick={() => handleLogout(navigate)}
-        className="flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold border-t mt-auto">
-          <FaSignOutAlt /> Logout
-        </button> */}
+       
         <li onClick={() => navigate("/profile")} className="flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold list-none cursor-pointer">
             <FaUserCircle />
              Profile
@@ -49,8 +46,7 @@ export const AdminSidebar = () => {
         </div>
       </div>
 
-      {/* 2. Main Content Area (Dynamic) */}
-      {/* ml-64 etle mukyu che jethi content sidebar ni BAJU ma rahe, niche nahi */}
+     
       <div className="flex-1 ml-64 min-h-screen">
         <Outlet /> 
         

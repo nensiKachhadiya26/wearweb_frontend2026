@@ -8,7 +8,7 @@ export const ApproveProducts = () => {
 
   const fetchPendingProducts = async () => {
     try {
-      const token = localStorage.getItem("token"); // Auth token jaruri che
+      const token = localStorage.getItem("token"); 
       const res = await axios.get("/productApi/admin/pending", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -25,10 +25,9 @@ export const ApproveProducts = () => {
   const handleApprove = async (id) => {
     try {
         const token = localStorage.getItem("token");
-        // અમે કંટ્રોલરમાં 'updateProductStatus' ફંક્શન બનાવ્યું હતું
         const res = await axios.put(
             `productApi/admin/update-status/${id}`, 
-            { status: "approved" }, // બોડીમાં સ્ટેટસ મોકલો
+            { status: "approved" }, 
             { headers: { Authorization: `Bearer ${token}` } }
         );
 

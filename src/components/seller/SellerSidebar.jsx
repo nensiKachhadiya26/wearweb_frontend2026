@@ -53,12 +53,7 @@ export const SellerSidebar = () => {
 
         {/* Bottom Section: Logout & Profile */}
         <div className="mt-auto border-t pt-2">
-          {/* <button 
-            onClick={() => handleLogout(navigate)}
-            className="w-full flex items-center gap-3 p-3 text-gray-500 hover:text-red-500 transition font-bold"
-          >
-            <FaSignOutAlt /> Logout
-          </button> */}
+         
           
           <li 
             onClick={() => navigate("/profile")} 

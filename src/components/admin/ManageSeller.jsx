@@ -20,7 +20,7 @@ export const ManageSeller = () => {
     }
   };
 
-  // Delete function (Tame ahiya add kari shako cho)
+  // Delete function 
   const deleteSeller = async (id) => {
     if (window.confirm("Are you sure you want to remove this seller?")) {
       try {

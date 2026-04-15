@@ -21,7 +21,7 @@ export const EditProduct = () => {
         sizes: []
     });
 
-    // ✅ CreateProduct જેવું જ Size Data Structure
+    // ✅ CreateProduct  Size Data Structure
     const sizeData = {
         "Jeans ": ["28", "30", "32", "34", "36", "38"],
         "Shirt": ["S", "M", "L", "XL", "XXL"],
@@ -69,7 +69,7 @@ export const EditProduct = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // જો Category બદલાય તો SubCategory અને Sizes રીસેટ કરવા
+        
         if (name === "categoryId") {
             setProduct({ ...product, categoryId: value, subCategoryId: '', sizes: [] });
         } else {
@@ -88,7 +88,6 @@ export const EditProduct = () => {
         setSelectedFile(e.target.files[0]);
     };
 
-    // SubCategory Name શોધવા માટે (Size Data માંથી મેચ કરવા)
     const selectedSubCategoryName = subCategories.find(sub => sub._id === product.subCategoryId)?.name;
 
     const handleUpdate = async (e) => {
@@ -164,7 +163,7 @@ export const EditProduct = () => {
                     </div>
                 </div>
 
-                {/* ✅ Dynamic Sizes - Sub Category મુજબ */}
+              
                 {selectedSubCategoryName && sizeData[selectedSubCategoryName] && (
                     <div className="p-4 bg-pink-50 rounded-xl border border-dashed border-pink-200 shadow-inner">
                         <label className="block text-sm font-bold text-pink-700 mb-3 uppercase tracking-wide">

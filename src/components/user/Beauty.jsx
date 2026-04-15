@@ -116,7 +116,7 @@ const Beauty = () => {
                   <h2 className="text-sm font-semibold text-gray-700 truncate">{product.name}</h2>
                   <p className="text-[#ff3f6c] font-bold text-lg mt-1">₹{product.price}</p>
                   
-                  {/* Space for consistency with other pages */}
+                 
                   <div className="min-h-[1.25rem] mt-1 mb-3"></div>
 
                   <button
