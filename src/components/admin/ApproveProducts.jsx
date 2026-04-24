@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaCheck, FaTimes, FaBox, FaUser, FaRupeeSign } from "react-icons/fa";
+import { FaCheck, FaTimes, FaUser } from "react-icons/fa";
 
 export const ApproveProducts = () => {
   const [pendingProducts, setPendingProducts] = useState([]);
@@ -22,23 +22,25 @@ export const ApproveProducts = () => {
     }
   };
 
-  const handleApprove = async (id) => {
+  // આ એક જ ફંક્શન Approve અને Reject બંને માટે કામ કરશે
+  const handleStatusUpdate = async (id, newStatus) => {
     try {
         const token = localStorage.getItem("token");
         const res = await axios.put(
             `productApi/admin/update-status/${id}`, 
-            { status: "approved" }, 
+            { status: newStatus }, // અહીં dynamic status (approved અથવા rejected) જશે
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (res.data.success) {
-            alert("Product Approved!");
-            fetchPendingProducts();
+            alert(`Product ${newStatus === "approved" ? "Approved" : "Rejected"}!`);
+            fetchPendingProducts(); // લિસ્ટ રિફ્રેશ કરવા માટે
         }
     } catch (err) {
-        console.error("Approval error", err);
+        console.error("Update status error", err);
+        alert("Something went wrong!");
     }
-};
+  };
 
   useEffect(() => {
     fetchPendingProducts();
@@ -68,22 +70,29 @@ export const ApproveProducts = () => {
               pendingProducts.map((product) => (
                 <tr key={product._id} className="hover:bg-gray-50 transition">
                   <td className="p-5 flex items-center gap-3">
-                    <img src={product.image} alt="" className="w-14 h-14 rounded-lg object-cover shadow-sm" />                    <span className="font-semibold text-gray-800">{product.name}</span>
+                    <img src={product.image} alt="" className="w-14 h-14 rounded-lg object-cover shadow-sm" />
+                    <span className="font-semibold text-gray-800">{product.name}</span>
                   </td>
                   <td className="p-5 text-gray-600 font-medium">
-<div className="flex items-center gap-2"><FaUser size={12}/> {product.sellerId?.firstName} {product.sellerId?.lastName}</div>                  </td>
+                    <div className="flex items-center gap-2">
+                      <FaUser size={12}/> {product.sellerId?.firstName} {product.sellerId?.lastName}
+                    </div>
+                  </td>
                   <td className="p-5 font-bold text-[#FF3F6C]">₹{product.price}</td>
                   <td className="p-5">
                     <div className="flex justify-center gap-2">
+                      {/* Approve Button */}
                       <button 
-                        onClick={() => handleApprove(product._id, "approve")}
+                        onClick={() => handleStatusUpdate(product._id, "approved")}
                         className="bg-green-100 text-green-600 p-2 rounded-lg hover:bg-green-600 hover:text-white transition shadow-sm"
                         title="Approve"
                       >
                         <FaCheck />
                       </button>
+                      
+                      {/* Reject Button */}
                       <button 
-                        onClick={() => handleAction(product._id, "reject")}
+                        onClick={() => handleStatusUpdate(product._id, "rejected")}
                         className="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white transition shadow-sm"
                         title="Reject"
                       >

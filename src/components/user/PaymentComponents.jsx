@@ -12,6 +12,7 @@ const PaymentComponents = () => {
 
     const handlePayNow = async () => {
         if (!totalAmount) return alert("Invalid amount");
+       
 
         setLoading(true);
         try {

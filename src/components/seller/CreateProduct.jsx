@@ -9,7 +9,7 @@ export const CreateProduct = () => {
     const [subCategories, setSubCategories] = useState([])
     const [loading, setLoading] = useState(false)
 
-    // ✅ તમારી રિક્વાયરમેન્ટ મુજબ સાઈઝ ડેટા
+   
     const sizeData = {
         // Men & Women Common
         "Jeans ": ["28", "30", "32", "34", "36", "38"],

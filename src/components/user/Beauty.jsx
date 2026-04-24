@@ -62,9 +62,8 @@ const Beauty = () => {
 
   return (
     <div className="bg-[#FFF0F5] min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 border-l-4 border-[#ff3f6c] pl-3">
-        Beauty Collection
-      </h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-800">Beauty Collection</h1>
+
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* --- Sidebar Filter (Kids જેવી જ ડિઝાઇન) --- */}

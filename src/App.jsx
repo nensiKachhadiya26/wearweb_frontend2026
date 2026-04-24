@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import AppRouter from './router/AppRouter'
 import { Bounce, ToastContainer } from 'react-toastify'
 import axios from 'axios'
+import 'react-toastify/dist/ReactToastify.css'
 //import './App.css'
 
 function App() {

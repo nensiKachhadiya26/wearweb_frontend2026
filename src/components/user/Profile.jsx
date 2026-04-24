@@ -23,7 +23,6 @@ const Profile = () => {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
             setUser(res.data);
-            // ડેટા સેટ કરતી વખતે ખાતરી કરો કે વેલ્યુ ખાલી ના રહે
             setFormData({ 
                 firstName: res.data.firstName || '', 
                 lastName: res.data.lastName || '', 
@@ -57,8 +56,7 @@ const Profile = () => {
                 data.append("profilePic", selectedImage);
             }
 
-            // CRITICAL: જો Admin માટે અલગ API હોય તો અહીં કન્ડિશન મૂકવી
-            // અત્યારે આપણે ધારી લઈએ છીએ કે /userApi/updateProfile જ વાપરવાનું છે
+           
             const res = await axios.put("/userApi/updateProfile", data, {
                 headers: { 
                     Authorization: `Bearer ${localStorage.getItem("token")}`,

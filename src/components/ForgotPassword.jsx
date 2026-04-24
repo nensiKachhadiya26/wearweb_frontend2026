@@ -72,7 +72,7 @@ export const ForgotPassword = () => {
 
             <button 
               type="submit" 
-              className="w-full bg-[#FF3F6C] hover:bg-[#e6335f] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#FF3F6C]/30 transition-all transform hover:scale-[1.02]">
+              className="w-full bg-[#FF3F6C] hover:bg-[#e6335f] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#FF3F6C]/30 transition-all transform hover:scale-[1.02] cursor-pointer">
               Send Link
             </button>
           </form>
